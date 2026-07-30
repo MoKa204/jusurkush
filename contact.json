@@ -1,0 +1,338 @@
+{
+  "version": "0.4",
+  "title": "Contact Us",
+  "type": "page",
+  "content": [
+    {
+      "id": "1zj39cd",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "0",
+          "bottom": "40",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "y4ijven",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "yuk2h5j",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Contact Us",
+                "header_size": "h1",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "wbuo867",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "ow73yrw",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "We are here to help. Reach out with questions, vendor inquiries, or buyer feedback.",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0783pah",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "pve17cd",
+          "elType": "column",
+          "settings": {
+            "_column_size": 60
+          },
+          "elements": [
+            {
+              "id": "63vtua3",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Send Us a Message",
+                "header_size": "h2",
+                "align": "left",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "3omo4th",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "20wfktv",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "shortcode": "[contact-form-7 id=\"1\" title=\"Contact form 1\"]"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "vo27mej",
+          "elType": "column",
+          "settings": {
+            "_column_size": 40
+          },
+          "elements": [
+            {
+              "id": "m4jieew",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Our Information",
+                "header_size": "h2",
+                "align": "left",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "ymtw8lm",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "20"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "yfbtdc8",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-envelope",
+                  "library": "fa-solid"
+                },
+                "title_text": "Email Address",
+                "description_text": "support@jusurkush.com",
+                "position": "left",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            },
+            {
+              "id": "hv8puld",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "opdmhsz",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-phone-alt",
+                  "library": "fa-solid"
+                },
+                "title_text": "Phone Number",
+                "description_text": "+249 91 234 5678",
+                "position": "left",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            },
+            {
+              "id": "ama98f4",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "mo5psnv",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-map-marker-alt",
+                  "library": "fa-solid"
+                },
+                "title_text": "Our Location",
+                "description_text": "Khartoum, Sudan",
+                "position": "left",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e7cjhid",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "m5a1xgy",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "exbjgfj",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Find Us in Khartoum",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "mgjncjk",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "20"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "16b4i13",
+              "elType": "widget",
+              "widgetType": "google_maps",
+              "settings": {
+                "address": "Khartoum, Sudan",
+                "zoom": {
+                  "size": 12
+                },
+                "height": {
+                  "size": 400,
+                  "unit": "px"
+                }
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {}
+}

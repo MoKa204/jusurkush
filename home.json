@@ -1,0 +1,786 @@
+{
+  "version": "0.4",
+  "title": "Homepage",
+  "type": "page",
+  "content": [
+    {
+      "id": "fb9tlq8",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "100",
+          "right": "0",
+          "bottom": "100",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "zjykpzs",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "l4y17hg",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Jusur Kush",
+                "header_size": "h1",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "64"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "1tk83n2",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "bo6k7l9",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Bridging Sudanese startup businesses with customers",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "20"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "6x0p5ba",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "husonk4",
+              "elType": "section",
+              "settings": {
+                "margin": {
+                  "unit": "px",
+                  "top": "0",
+                  "right": "auto",
+                  "bottom": "0",
+                  "left": "auto",
+                  "isLinked": false
+                }
+              },
+              "elements": [
+                {
+                  "id": "8o2b5kw",
+                  "elType": "column",
+                  "settings": {
+                    "_column_size": 50
+                  },
+                  "elements": [
+                    {
+                      "id": "44bvjzz",
+                      "elType": "widget",
+                      "widgetType": "button",
+                      "settings": {
+                        "text": "Shop Now",
+                        "link": {
+                          "url": "/shop",
+                          "is_external": "",
+                          "nofollow": "",
+                          "custom_attributes": ""
+                        },
+                        "align": "right",
+                        "size": "md",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Inter",
+                        "typography_font_weight": "600",
+                        "border_radius": {
+                          "unit": "px",
+                          "top": "6",
+                          "right": "6",
+                          "bottom": "6",
+                          "left": "6",
+                          "isLinked": true
+                        },
+                        "background_color": "#C8A97E",
+                        "button_text_color": "#FFFFFF"
+                      },
+                      "elements": []
+                    }
+                  ]
+                },
+                {
+                  "id": "mmxr23e",
+                  "elType": "column",
+                  "settings": {
+                    "_column_size": 50
+                  },
+                  "elements": [
+                    {
+                      "id": "co3ehvx",
+                      "elType": "widget",
+                      "widgetType": "button",
+                      "settings": {
+                        "text": "Start Selling",
+                        "link": {
+                          "url": "/become-a-vendor",
+                          "is_external": "",
+                          "nofollow": "",
+                          "custom_attributes": ""
+                        },
+                        "align": "left",
+                        "size": "md",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Inter",
+                        "typography_font_weight": "600",
+                        "border_radius": {
+                          "unit": "px",
+                          "top": "6",
+                          "right": "6",
+                          "bottom": "6",
+                          "left": "6",
+                          "isLinked": true
+                        },
+                        "background_color": "rgba(0,0,0,0)",
+                        "button_text_color": "#C8A97E",
+                        "border_style": "solid",
+                        "border_width": {
+                          "unit": "px",
+                          "top": "2",
+                          "right": "2",
+                          "bottom": "2",
+                          "left": "2",
+                          "isLinked": true
+                        },
+                        "border_color": "#C8A97E"
+                      },
+                      "elements": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qxv5vbz",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#C8A97E",
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "0",
+          "bottom": "40",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "bn6cfqq",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "668x61z",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "500+",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "48"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "wpok3tj",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Sellers Active",
+                "text_color": "#5C3D2E",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "p9yot6l",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "25bew67",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "2,000+",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "48"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "16jri5z",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Premium Products",
+                "text_color": "#5C3D2E",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "51k4xra",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "jdhvm8a",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "15,000+",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "48"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "qo81ovn",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Happy Customers",
+                "text_color": "#5C3D2E",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bhnmvsh",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "2t1nt1b",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "3vw51gj",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-shipping-fast",
+                  "library": "fa-solid"
+                },
+                "title_text": "Fast Delivery",
+                "description_text": "Reliable and fast shipping service nationwide across Sudan.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "jd1rqyf",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "oy5dspk",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-shield-alt",
+                  "library": "fa-solid"
+                },
+                "title_text": "Buyer Protection",
+                "description_text": "Your transactions are highly secure and protected at every step.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "89i8b5o",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "a2q3323",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-credit-card",
+                  "library": "fa-solid"
+                },
+                "title_text": "Easy Payments",
+                "description_text": "Seamless and secure local and mobile payment systems.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "0dz8kg3",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "3j1oyhr",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-headset",
+                  "library": "fa-solid"
+                },
+                "title_text": "Local Support",
+                "description_text": "Dedicated 24/7 client care team assisting vendors and buyers.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tr81s0q",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "ep2g7gz",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "bezccz6",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Shop by Category",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "dvmwm2q",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "u3nlgzz",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#C8A97E",
+                "weight": {
+                  "unit": "px",
+                  "size": "2"
+                },
+                "width": {
+                  "unit": "%",
+                  "size": "80"
+                },
+                "align": "center"
+              },
+              "elements": []
+            },
+            {
+              "id": "rvcl2mu",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "bhs3p3z",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "shortcode": "[product_categories number='4' columns='4']"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ozk8dmz",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "5sp4img",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "emdpr9q",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Featured Products",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "mu3mkse",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "o9vxy2d",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#C8A97E",
+                "weight": {
+                  "unit": "px",
+                  "size": "2"
+                },
+                "width": {
+                  "unit": "%",
+                  "size": "80"
+                },
+                "align": "center"
+              },
+              "elements": []
+            },
+            {
+              "id": "8h2ot5j",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "2wr8wqj",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "shortcode": "[products limit='4' columns='4' visibility='featured']"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mne0e1z",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "ohs3257",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "c8c94mt",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Empower Your Brand as a Vendor",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "cih7cxq",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "de91ddx",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Are you a Sudanese artisan or business owner? Connect with thousands of buyers locally and globally today by launching your digital storefront.",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            },
+            {
+              "id": "thpuuat",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "dkbd6de",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Register as Vendor",
+                "link": {
+                  "url": "/become-a-vendor",
+                  "is_external": "",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                },
+                "align": "center",
+                "size": "md",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "6",
+                  "right": "6",
+                  "bottom": "6",
+                  "left": "6",
+                  "isLinked": true
+                },
+                "background_color": "#C8A97E",
+                "button_text_color": "#FFFFFF"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {}
+}

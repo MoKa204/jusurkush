@@ -1,0 +1,612 @@
+{
+  "version": "0.4",
+  "title": "About Us",
+  "type": "page",
+  "content": [
+    {
+      "id": "tf59x71",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "100",
+          "right": "0",
+          "bottom": "100",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "qmm0ldy",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "mdgrqc2",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "About Jusur Kush",
+                "header_size": "h1",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "u92qce0",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "c1yvwfn",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Preserving Sudanese craftsmanship and connecting local artisans to the digital economy.",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mtn4qgm",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "7rha58m",
+          "elType": "column",
+          "settings": {
+            "_column_size": 60
+          },
+          "elements": [
+            {
+              "id": "rttk1pf",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Our Story",
+                "header_size": "h2",
+                "align": "left",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "v5drq8u",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "hm4hu63",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Jusur Kush was founded to solve a major challenge faced by Sudanese creators: access to a stable, appreciative market. The traditional crafts of Sudan—rich in culture, meticulous design, and unique heritage—often struggle to find customers beyond local markets.",
+                "text_color": "#333333",
+                "align": "left",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            },
+            {
+              "id": "jgq6of2",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "yo0bz3h",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "By building a robust e-commerce bridge (Jusur), we seek to enable small-scale Sudanese workshops, independent designers, and skilled artisans to digitize their businesses, expand their visibility, and ensure their craft remains viable and preserved for generations.",
+                "text_color": "#333333",
+                "align": "left",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "3hynndd",
+          "elType": "column",
+          "settings": {
+            "_column_size": 40
+          },
+          "elements": [
+            {
+              "id": "02oqblc",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-hands",
+                  "library": "fa-solid"
+                },
+                "title_text": "Sudanese Craftsmanship",
+                "description_text": "Celebrating Sudanese heritage through beautiful, hand-finished premium goods.",
+                "position": "top",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cuto919",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "ch5wcw9",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "kvammsr",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Our Mission",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "o2e9snr",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "inzxajg",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "To empower Sudanese micro-businesses by providing an elite, simple-to-use e-commerce ecosystem that connects high-quality traditional Sudanese craftsmanship with customers everywhere, celebrating local materials and age-old design legacy.",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "erzztey",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#C8A97E",
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "0",
+          "bottom": "40",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "73z43xi",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "rl81g7n",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "500+",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "48"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "mydmmae",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Sellers Active",
+                "text_color": "#5C3D2E",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "3bwnihq",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "v8z1oni",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "2,000+",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "48"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "o1dbbce",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Premium Products",
+                "text_color": "#5C3D2E",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "em8paps",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "ljresah",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "15,000+",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": "48"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "rl8dw04",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Happy Customers",
+                "text_color": "#5C3D2E",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zuhcnfg",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "dinvqi8",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "1kbnepw",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Our Core Values",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "fbtba89",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "tkfgf9v",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#C8A97E",
+                "weight": {
+                  "unit": "px",
+                  "size": "2"
+                },
+                "width": {
+                  "unit": "%",
+                  "size": "80"
+                },
+                "align": "center"
+              },
+              "elements": []
+            },
+            {
+              "id": "2kkjwm0",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "40"
+                }
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "x0jq8je",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "jnjcek5",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "52b0vqn",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-heart",
+                  "library": "fa-solid"
+                },
+                "title_text": "Authenticity",
+                "description_text": "We guarantee only hand-made and traditional Sudanese items that display true artisan spirit.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "wc9um95",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "9lx7o6q",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-chart-line",
+                  "library": "fa-solid"
+                },
+                "title_text": "Empowerment",
+                "description_text": "We lift local economies and micro-businesses, ensuring ethical practices and fair profit shares.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "svs1rio",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "wgyxx3m",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-award",
+                  "library": "fa-solid"
+                },
+                "title_text": "Quality & Craft",
+                "description_text": "We vet each merchant and design line to maintain high quality and highlight artistic detail.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {}
+}

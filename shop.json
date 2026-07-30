@@ -1,0 +1,130 @@
+{
+  "version": "0.4",
+  "title": "Shop Page",
+  "type": "page",
+  "content": [
+    {
+      "id": "mjtjjbt",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "0",
+          "bottom": "40",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "ikwm4vg",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "dpqflzt",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "All Products",
+                "header_size": "h1",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "c6126ry",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "qzy6kol",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Browse through outstanding collections of hand-made Sudanese products",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "uu5vz8a",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "rz3mqe7",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "yvubi34",
+              "elType": "widget",
+              "widgetType": "sidebar",
+              "settings": {
+                "sidebar": "sidebar-1"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "y4rajnz",
+          "elType": "column",
+          "settings": {
+            "_column_size": 75
+          },
+          "elements": [
+            {
+              "id": "898s81g",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "shortcode": "[products limit='12' columns='3' paginate='true']"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {}
+}

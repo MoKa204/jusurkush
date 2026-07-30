@@ -1,0 +1,753 @@
+{
+  "version": "0.4",
+  "title": "Become a Vendor",
+  "type": "page",
+  "content": [
+    {
+      "id": "9g5w9l3",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#3D1F0F",
+        "padding": {
+          "unit": "px",
+          "top": "100",
+          "right": "0",
+          "bottom": "100",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "yql9dy9",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "79xf9u9",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Start Selling on Jusur Kush",
+                "header_size": "h1",
+                "align": "center",
+                "title_color": "#C8A97E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "2w6eu41",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "15"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "zn92m3x",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Join the fastest growing digital marketplace for traditional Sudanese crafts and handmade products.",
+                "text_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            },
+            {
+              "id": "6meldnb",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "nu10pf1",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Get Started",
+                "link": {
+                  "url": "#registration-section",
+                  "is_external": "",
+                  "nofollow": "",
+                  "custom_attributes": ""
+                },
+                "align": "center",
+                "size": "md",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "border_radius": {
+                  "unit": "px",
+                  "top": "6",
+                  "right": "6",
+                  "bottom": "6",
+                  "left": "6",
+                  "isLinked": true
+                },
+                "background_color": "#C8A97E",
+                "button_text_color": "#FFFFFF"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hcm5sku",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "7frvhet",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "f7683x2",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Why Partner With Us?",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "0351inn",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "dgj5gg1",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#C8A97E",
+                "weight": {
+                  "unit": "px",
+                  "size": "2"
+                },
+                "width": {
+                  "unit": "%",
+                  "size": "80"
+                },
+                "align": "center"
+              },
+              "elements": []
+            },
+            {
+              "id": "dvgji7b",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "40"
+                }
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wgt4w34",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "43ga53g",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "fxih60o",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-users",
+                  "library": "fa-solid"
+                },
+                "title_text": "Wide Reach",
+                "description_text": "Get instantaneous visibility to thousands of customers looking for authentic Sudanese crafts.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "x0fzcrv",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "1flliob",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-cogs",
+                  "library": "fa-solid"
+                },
+                "title_text": "Easy Setup",
+                "description_text": "No technical knowledge required. Upload products and manage your stock effortlessly.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "48rvng4",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "8p2325i",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-wallet",
+                  "library": "fa-solid"
+                },
+                "title_text": "Secure Payments",
+                "description_text": "Enjoy smooth payment procedures with fast payouts processed directly to your account.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "iydhhpu",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "lk9rio5",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-headset",
+                  "library": "fa-solid"
+                },
+                "title_text": "Dedicated Support",
+                "description_text": "Our dedicated support team provides continuous business coaching and operational aid.",
+                "position": "top",
+                "primary_color": "#5C3D2E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gypzs4v",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "40",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "av47vew",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "h2br5ig",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "How It Works",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "mwf5h8z",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "95sqzlo",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#C8A97E",
+                "weight": {
+                  "unit": "px",
+                  "size": "2"
+                },
+                "width": {
+                  "unit": "%",
+                  "size": "80"
+                },
+                "align": "center"
+              },
+              "elements": []
+            },
+            {
+              "id": "ljfvoyw",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "40"
+                }
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pqdzjxf",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "xicvpb3",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "get3onx",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-user-plus",
+                  "library": "fa-solid"
+                },
+                "title_text": "Step 1: Register",
+                "description_text": "Sign up on our platform as a vendor with your basic details.",
+                "position": "top",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "ihv36jy",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "xbh5cgy",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-store-alt",
+                  "library": "fa-solid"
+                },
+                "title_text": "Step 2: Set Up Store",
+                "description_text": "Customize your digital storefront and upload high-quality product images.",
+                "position": "top",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "fpbcdl6",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "t4yf2dr",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-box-open",
+                  "library": "fa-solid"
+                },
+                "title_text": "Step 3: List Products",
+                "description_text": "Define attributes, prices, and shipping guidelines for your inventory.",
+                "position": "top",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        },
+        {
+          "id": "jgd40sy",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "6dbu1zo",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-money-bill-wave",
+                  "library": "fa-solid"
+                },
+                "title_text": "Step 4: Start Earning",
+                "description_text": "Fulfill orders as they come in and receive timely payouts.",
+                "position": "top",
+                "primary_color": "#C8A97E",
+                "title_color": "#5C3D2E",
+                "description_color": "#333333",
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zxhr2lc",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        },
+        "html_id": "registration-section"
+      },
+      "elements": [
+        {
+          "id": "xpl5eka",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "wd1lonw",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Join the Marketplace Today",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "ztiai62",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "10"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "p6w5rzf",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "Fill out the vendor application form below to set up your online store instantly.",
+                "text_color": "#333333",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "400"
+              },
+              "elements": []
+            },
+            {
+              "id": "0407jef",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "hrwg21t",
+              "elType": "widget",
+              "widgetType": "shortcode",
+              "settings": {
+                "shortcode": "[dokan-vendor-registration]"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "am6978e",
+      "elType": "section",
+      "settings": {
+        "background_background": "classic",
+        "background_color": "#FDF6EE",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "0",
+          "bottom": "80",
+          "left": "0",
+          "isLinked": false
+        }
+      },
+      "elements": [
+        {
+          "id": "tkw8f53",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "h19wfe6",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Vendor Frequently Asked Questions",
+                "header_size": "h2",
+                "align": "center",
+                "title_color": "#5C3D2E",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700"
+              },
+              "elements": []
+            },
+            {
+              "id": "c8q1hfv",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": "30"
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "y3bva40",
+              "elType": "widget",
+              "widgetType": "accordion",
+              "settings": {
+                "tabs": [
+                  {
+                    "tab_title": "How much does it cost to sell on Jusur Kush?",
+                    "tab_content": "Registration is absolutely free. We only charge a small standard commission on successful sales to keep the platform running smoothly."
+                  },
+                  {
+                    "tab_title": "How and when do I get paid?",
+                    "tab_content": "Payments are processed securely and sent directly to your bank account or local mobile money system (e.g. Bankak, SyberPay) on a weekly basis."
+                  },
+                  {
+                    "tab_title": "Who handles shipping and deliveries?",
+                    "tab_content": "We partner with local delivery services to handle pickups and shipping. Once you package an order, our delivery partner will collect it from your location."
+                  },
+                  {
+                    "tab_title": "What kinds of products can I sell?",
+                    "tab_content": "Jusur Kush is designed specifically for authentic Sudanese traditional crafts, handmade art, jewelry, natural skincare, leatherwork, and traditional apparel."
+                  }
+                ],
+                "title_color": "#5C3D2E",
+                "title_active_color": "#C8A97E",
+                "content_color": "#333333",
+                "icon_color": "#5C3D2E",
+                "icon_active_color": "#C8A97E"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {}
+}

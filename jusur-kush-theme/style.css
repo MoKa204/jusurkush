@@ -1,0 +1,30 @@
+/*
+Theme Name: Jusur Kush
+Theme URI: https://jusurkush.com
+Author: Antigravity AI
+Author URI: 
+Description: E-commerce website for Jusur Kush, Sudan's Startup Marketplace.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: jusur-kush
+Tags: e-commerce, custom-colors, custom-logo, translation-ready, woocommerce
+*/
+
+/* ─── Variables ────────────────────────────────────────────── */
+:root {
+  --font-size: 16px;
+  --background: #F5F0E8;
+  --foreground: #2C2C2C;
+  --primary: #030213;
+  --muted: #ececf0;
+  
+  /* Brand colors */
+  --brand-primary: #7C5C3A;
+  --brand-secondary: #A0744A;
+  --brand-accent: #C4956A;
+  --brand-light: #E8D5B0;
+  --brand-dark: #5C3D1E;
+  
+  --radius: 0.625rem;
+}
