@@ -5,9 +5,6 @@ import { getStorageProvider } from "@/lib/storage";
 export async function POST(req: Request) {
   try {
     const user = await getSessionUser();
-    if (!user || (user.role !== "SELLER" && user.role !== "ADMIN")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
@@ -15,6 +12,12 @@ export async function POST(req: Request) {
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    // Restrict product catalog asset uploads to sellers/admins,
+    // while allowing passport KYC photos and payment proofs for buyers & registrants
+    if (folder === "products" && (!user || (user.role !== "SELLER" && user.role !== "ADMIN"))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const storage = getStorageProvider();

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Store, Mail, Lock, User, FileText, Phone, MapPin, Landmark, AlertCircle } from "lucide-react";
+import { Store, Mail, Lock, User, FileText, Phone, MapPin, Landmark, AlertCircle, ShieldCheck, Upload } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -16,6 +16,10 @@ export default function RegisterSellerPage() {
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [businessAddress, setBusinessAddress] = useState("");
   const [contactInfo, setContactInfo] = useState("");
+
+  // Passport KYC State
+  const [passportPhoto, setPassportPhoto] = useState("");
+  const [uploadingPassport, setUploadingPassport] = useState(false);
   
   // Bank Account Fields
   const [bankName, setBankName] = useState("Bank of Khartoum / Al Rajhi");
@@ -28,6 +32,33 @@ export default function RegisterSellerPage() {
 
   const { refetchUser } = useAuth();
   const router = useRouter();
+
+  const handlePassportUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingPassport(true);
+    setError("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "passports");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+
+      setPassportPhoto(data.url);
+    } catch (err: any) {
+      setError(err.message || "Failed to upload passport photo");
+    } finally {
+      setUploadingPassport(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +77,7 @@ export default function RegisterSellerPage() {
           registrationNumber,
           businessAddress,
           contactInfo,
+          passportPhoto: passportPhoto || undefined,
           bankName,
           bankAccountName: bankAccountName || `${businessName} Account`,
           bankAccountNumber,
@@ -209,11 +241,59 @@ export default function RegisterSellerPage() {
           </div>
         </div>
 
+        {/* Passport KYC Upload Section */}
+        <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200 space-y-3">
+          <h3 className="font-bold text-slate-800 text-xs border-b border-amber-200 pb-2 flex items-center space-x-2 space-x-reverse">
+            <ShieldCheck className="w-4 h-4 text-amber-600" />
+            <span>
+              3. {language === "ar" ? "توثيق الهوية / صورة جواز السفر (إلزامي للتحقق)" : "Identity Verification / Passport Photo (Required for KYC Audit)"}
+            </span>
+          </h3>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            {passportPhoto ? (
+              <div className="relative w-36 h-24 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-sm flex-shrink-0">
+                <img src={passportPhoto} alt="Passport Preview" className="w-full h-full object-cover" />
+                <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold shadow">
+                  ✓ {language === "ar" ? "تم الرفع" : "Uploaded"}
+                </span>
+              </div>
+            ) : (
+              <div className="w-36 h-24 bg-white rounded-xl border-2 border-dashed border-amber-300 flex flex-col items-center justify-center text-amber-600 text-[10px] gap-1 flex-shrink-0">
+                <Upload className="w-5 h-5 text-amber-500" />
+                <span>{language === "ar" ? "لم تتم الإضافة" : "No photo uploaded"}</span>
+              </div>
+            )}
+
+            <div className="flex-1 space-y-1 text-center sm:text-right rtl:sm:text-right">
+              <label className="block font-bold text-slate-800 text-xs">
+                {language === "ar" ? "رفع صورة جواز السفر أو الهوية الوطنية" : "Upload Passport or ID Photo"}
+              </label>
+              <p className="text-[11px] text-slate-500">
+                {language === "ar"
+                  ? "تخضع بيانات جواز السفر لمراجعة الإدارة للتحقق من هوية البائع وتدقيق الحساب قبل اعتماد المنتجات."
+                  : "Submitted passport photos are audited by admins to verify merchant identity."}
+              </p>
+              <label className="inline-flex items-center space-x-2 space-x-reverse px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl cursor-pointer text-xs transition mt-2 shadow-sm">
+                <Upload className="w-3.5 h-3.5" />
+                <span>
+                  {uploadingPassport
+                    ? language === "ar" ? "جاري الرفع..." : "Uploading..."
+                    : passportPhoto
+                    ? language === "ar" ? "تغيير صورة الجواز" : "Change Passport Photo"
+                    : language === "ar" ? "رفع صورة الجواز الآن" : "Upload Passport Image"}
+                </span>
+                <input type="file" accept="image/*" onChange={handlePassportUpload} className="hidden" />
+              </label>
+            </div>
+          </div>
+        </div>
+
         {/* Seller Bank Details */}
         <div className="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200 space-y-4">
           <h3 className="font-bold text-slate-800 text-xs border-b border-emerald-200 pb-2 flex items-center space-x-2 space-x-reverse">
             <Landmark className="w-4 h-4 text-emerald-600" />
-            <span>3. {t("bankDetailsTitle")}</span>
+            <span>4. {t("bankDetailsTitle")}</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -267,7 +347,7 @@ export default function RegisterSellerPage() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || uploadingPassport}
           className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition disabled:opacity-50 shadow text-xs"
         >
           {loading

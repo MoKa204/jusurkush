@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, Clock, CheckCircle2, RotateCcw, Upload, Video, Image as ImageIcon, AlertCircle, FileText, X } from "lucide-react";
+import { Package, Clock, CheckCircle2, RotateCcw, Upload, Video, Image as ImageIcon, AlertCircle, FileText, ShieldCheck } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 
 const RETURN_REASONS_AR = [
@@ -24,9 +25,15 @@ const RETURN_REASONS_EN = [
 ];
 
 export default function CustomerOrdersPage() {
+  const { user, refetchUser } = useAuth();
   const { language } = useLanguage();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Passport Upload State in Profile
+  const [passportPhoto, setPassportPhoto] = useState<string>("");
+  const [uploadingPassport, setUploadingPassport] = useState(false);
+  const [passportSuccess, setPassportSuccess] = useState<string | null>(null);
 
   // Return Modal State
   const [returnOrderId, setReturnOrderId] = useState<string | null>(null);
@@ -37,6 +44,12 @@ export default function CustomerOrdersPage() {
   const [uploading, setUploading] = useState(false);
   const [submittingReturn, setSubmittingReturn] = useState(false);
   const [returnError, setReturnError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.passportPhoto) {
+      setPassportPhoto(user.passportPhoto);
+    }
+  }, [user]);
 
   const fetchOrders = () => {
     setLoading(true);
@@ -50,6 +63,51 @@ export default function CustomerOrdersPage() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const handleProfilePassportUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingPassport(true);
+    setPassportSuccess(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "passports");
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const uploadData = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error(uploadData.error || "Passport upload failed");
+
+      const photoUrl = uploadData.url;
+      setPassportPhoto(photoUrl);
+
+      // Save to profile
+      const saveRes = await fetch("/api/profile/passport", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passportPhoto: photoUrl }),
+      });
+
+      const saveData = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveData.error || "Failed to save passport photo");
+
+      await refetchUser();
+      setPassportSuccess(
+        language === "ar"
+          ? "تم رفع صورة جواز السفر بنجاح! طلب التوثيق قيد مراجعة الإدارة."
+          : "Passport photo uploaded successfully! Verification request pending admin audit."
+      );
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setUploadingPassport(false);
+    }
+  };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -152,20 +210,105 @@ export default function CustomerOrdersPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 text-xs">
+      {/* Header Profile Title */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-slate-800 flex items-center space-x-2 space-x-reverse">
             <Package className="w-5 h-5 text-emerald-600" />
-            <span>{language === "ar" ? "طلباتي المكتملة والسابقة" : "My Orders & Purchases"}</span>
+            <span>{language === "ar" ? "الملف الشخصي وسجل المشتريات" : "My Profile & Purchases"}</span>
           </h1>
           <p className="text-xs text-slate-500">
             {language === "ar"
-              ? "استعرض حالة الشحنات، تفاصيل المشتريات، وإرجاع المنتجات المستلمة"
-              : "Track order status, delivery progress, and request returns for delivered items"}
+              ? "إدارة توثيق الهوية والجواز، استعراض المشتريات، وإرجاع المنتجات"
+              : "Manage identity verification, passport KYC, purchase history, and product returns"}
           </p>
         </div>
       </div>
 
+      {/* User Passport KYC Verification Card */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2 space-x-reverse">
+              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+              <span>{language === "ar" ? "توثيق الهوية وجواز السفر (KYC)" : "Passport KYC & Identity Verification"}</span>
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {language === "ar"
+                ? "توثيق جواز السفر يتيح إجراء عمليات التحويل المصرفي المباشر وحماية المشتريات"
+                : "Passport verification enables instant direct bank transfers and buyer protection"}
+            </p>
+          </div>
+
+          <div className="flex items-center space-x-2 space-x-reverse">
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                user?.verificationStatus === "VERIFIED"
+                  ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+                  : user?.verificationStatus === "PENDING"
+                  ? "bg-amber-50 border-amber-300 text-amber-800"
+                  : "bg-slate-100 border-slate-300 text-slate-600"
+              }`}
+            >
+              {user?.verificationStatus === "VERIFIED"
+                ? language === "ar" ? "✓ حساب موثق بالكامل" : "✓ Fully Verified"
+                : user?.verificationStatus === "PENDING"
+                ? language === "ar" ? "⏳ قيد مراجعة الإدارة" : "⏳ Pending Audit"
+                : language === "ar" ? "غير موثق بعد" : "Not Verified"}
+            </span>
+          </div>
+        </div>
+
+        {passportSuccess && (
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center space-x-2 space-x-reverse">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span>{passportSuccess}</span>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          {passportPhoto || user?.passportPhoto ? (
+            <div className="relative w-40 h-24 rounded-xl overflow-hidden border-2 border-emerald-500 shadow-sm flex-shrink-0">
+              <img src={passportPhoto || user?.passportPhoto || ""} alt="Passport Photo" className="w-full h-full object-cover" />
+              <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded font-bold shadow">
+                {user?.verificationStatus === "VERIFIED" ? "✓ Verified" : "Pending"}
+              </span>
+            </div>
+          ) : (
+            <div className="w-40 h-24 bg-white rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1 flex-shrink-0">
+              <Upload className="w-6 h-6 text-slate-400" />
+              <span>{language === "ar" ? "لا توجد صورة" : "No Passport Uploaded"}</span>
+            </div>
+          )}
+
+          <div className="flex-1 space-y-2 text-center sm:text-right rtl:sm:text-right">
+            <div>
+              <p className="font-bold text-slate-800 text-xs">
+                {language === "ar" ? "صورة جواز السفر المعتمدة" : "Registered Passport Image"}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                {language === "ar"
+                  ? "قم برفع أو تحديث صورة جواز سفرك في أي وقت لتوثيق الحساب وتسريع عمليات السداد"
+                  : "Upload or update your passport image anytime to manage your verification status."}
+              </p>
+            </div>
+
+            <label className="inline-flex items-center space-x-2 space-x-reverse px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl cursor-pointer text-xs transition shadow-sm">
+              <Upload className="w-3.5 h-3.5" />
+              <span>
+                {uploadingPassport
+                  ? language === "ar" ? "جاري الرفع والتحفظ..." : "Uploading & Saving..."
+                  : passportPhoto || user?.passportPhoto
+                  ? language === "ar" ? "تغيير صورة جواز السفر" : "Change Passport Photo"
+                  : language === "ar" ? "رفع صورة جواز السفر الآن" : "Upload Passport Image"}
+              </span>
+              <input type="file" accept="image/*" onChange={handleProfilePassportUpload} className="hidden" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Orders List Section */}
       {orders.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
           <Package className="w-12 h-12 text-slate-300 mx-auto mb-3" />
