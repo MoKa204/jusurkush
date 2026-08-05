@@ -67,8 +67,8 @@ export default function Checkout() {
 
   const selectedDelivery = deliveryOptions.find((d) => d.id === deliveryMethod)!;
   const subtotal = cartTotal;
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + tax + selectedDelivery.price;
+  /*const tax = Math.round(subtotal * 0.05);*/
+  const total = subtotal + selectedDelivery.price;
 
   const handlePlaceOrder = () => {
     setOrderPlaced(true);
