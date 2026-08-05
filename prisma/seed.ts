@@ -1,71 +1,52 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding category taxonomy (NO fake products/users)...");
+  const passwordHash = await bcrypt.hash("password123", 10);
 
-  const categories = [
-    {
-      name: "Electronics & Gadgets",
-      slug: "electronics",
-      description: "Smartphones, laptops, accessories, and consumer electronics",
-      icon: "Smartphone",
+  // Demo Delivery Officer
+  const deliveryOfficer = await prisma.user.upsert({
+    where: { email: "delivery@jusurkush.com" },
+    update: {
+      role: "DELIVERY_OFFICER",
+      phone: "+249 912 345 678",
     },
-    {
-      name: "Fashion & Apparel",
-      slug: "fashion",
-      description: "Clothing, shoes, bags, and fashion accessories",
-      icon: "Shirt",
+    create: {
+      email: "delivery@jusurkush.com",
+      name: "أحمد السوداني (مندوب التوصيل)",
+      passwordHash,
+      role: "DELIVERY_OFFICER",
+      phone: "+249 912 345 678",
+      verificationStatus: "VERIFIED",
     },
-    {
-      name: "Home & Living",
-      slug: "home-living",
-      description: "Furniture, home decor, kitchenware, and appliances",
-      icon: "Home",
-    },
-    {
-      name: "Health & Beauty",
-      slug: "health-beauty",
-      description: "Skincare, cosmetics, personal care, and wellness products",
-      icon: "Sparkles",
-    },
-    {
-      name: "Sports & Outdoor",
-      slug: "sports-outdoor",
-      description: "Fitness gear, outdoor equipment, and sportswear",
-      icon: "Dumbbell",
-    },
-    {
-      name: "Books & Stationery",
-      slug: "books-stationery",
-      description: "Books, notebooks, pens, and office supplies",
-      icon: "BookOpen",
-    },
-    {
-      name: "Toys, Kids & Baby",
-      slug: "toys-kids-baby",
-      description: "Toys, baby gear, clothing, and learning items",
-      icon: "Baby",
-    },
-  ];
+  });
 
-  for (const cat of categories) {
-    await prisma.category.upsert({
-      where: { slug: cat.slug },
-      update: {},
-      create: cat,
-    });
-  }
+  // Demo Admin
+  const admin = await prisma.user.upsert({
+    where: { email: "admin@jusurkush.com" },
+    update: {
+      role: "ADMIN",
+    },
+    create: {
+      email: "admin@jusurkush.com",
+      name: "مدير النظام (Executive Admin)",
+      passwordHash,
+      role: "ADMIN",
+      verificationStatus: "VERIFIED",
+    },
+  });
 
-  console.log("Categories seeded successfully. Zero products/users created.");
+  console.log("Seeding complete: Created Delivery Officer & Admin accounts.");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
   });

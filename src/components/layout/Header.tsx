@@ -3,24 +3,30 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Search, Store, ShieldCheck, User, LogOut, Package, Landmark, Globe, ChevronDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext";
-import { useLanguage, Language } from "@/context/LanguageContext";
-
-const LANGUAGES: { code: Language; label: string; flag: string }[] = [
-  { code: "ar", label: "العربية (Arabic)", flag: "🇸🇩" },
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
-  { code: "tr", label: "Türkçe", flag: "🇹🇷" },
-];
+import { useLanguage } from "@/context/LanguageContext";
+import {
+  ShoppingBag,
+  Search,
+  ShoppingCart,
+  User as UserIcon,
+  Store,
+  ShieldCheck,
+  Globe,
+  LogOut,
+  ChevronDown,
+  Truck,
+  FileCheck,
+} from "lucide-react";
 
 export default function Header() {
   const { user, logout } = useAuth();
-  const { itemCount } = useCart();
-  const { language, setLanguage, t } = useLanguage();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { language, setLanguage, t, dir } = useLanguage();
   const router = useRouter();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,151 +35,228 @@ export default function Header() {
     }
   };
 
-  const activeLang = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
+  const LANGUAGES = [
+    { code: "ar", label: "العربية", flag: "🇸🇩" },
+    { code: "en", label: "English", flag: "🇺🇸" },
+    { code: "fr", label: "Français", flag: "🇫🇷" },
+    { code: "tr", label: "Türkçe", flag: "🇹🇷" },
+  ];
 
   return (
-    <header className="bg-gradient-to-r from-[#047857] via-[#059669] to-[#0d9488] text-white shadow-md">
-      {/* Top Bar */}
-      <div className="max-w-7xl mx-auto px-4 py-1.5 flex justify-between items-center text-xs border-b border-white/15">
-        <div className="flex items-center space-x-4 space-x-reverse">
-          <Link href="/seller" className="flex items-center space-x-1 space-x-reverse hover:text-white/80 transition font-medium">
-            <Store className="w-3.5 h-3.5" />
-            <span>{t("sellerCentre")}</span>
-          </Link>
-          <span className="text-white/40">|</span>
-          <Link href="/register-seller" className="hover:text-white/80 transition font-medium">
-            {t("startSelling")}
-          </Link>
-          {user?.role === "ADMIN" && (
-            <>
-              <span className="text-white/40">|</span>
-              <Link href="/admin" className="flex items-center space-x-1 space-x-reverse text-emerald-200 hover:text-emerald-100 font-bold transition">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>{t("adminPanel")}</span>
-              </Link>
-            </>
-          )}
-        </div>
-
-        <div className="flex items-center space-x-4 space-x-reverse">
-          {/* Language Selector Dropdown */}
-          <div className="relative group py-1 cursor-pointer">
-            <div className="flex items-center space-x-1 space-x-reverse font-semibold hover:text-white/90 transition text-xs">
-              <Globe className="w-3.5 h-3.5" />
-              <span>{activeLang.flag} {activeLang.label.split(" ")[0]}</span>
-              <ChevronDown className="w-3 h-3 text-white/70" />
-            </div>
-
-            {/* Language Options Dropdown Menu */}
-            <div className="absolute left-0 ltr:right-0 ltr:left-auto top-full hidden group-hover:block bg-white text-slate-800 rounded-lg shadow-xl py-1.5 w-44 z-50 border border-slate-100">
-              {LANGUAGES.map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
-                  className={`w-full flex items-center space-x-2 space-x-reverse px-3 py-2 text-xs text-right font-medium hover:bg-emerald-50 transition ${
-                    language === lang.code ? "bg-emerald-50 text-emerald-700 font-bold" : "text-slate-700"
-                  }`}
-                >
-                  <span>{lang.flag}</span>
-                  <span>{lang.label}</span>
-                </button>
-              ))}
-            </div>
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm" dir={dir}>
+      {/* Top Utility Bar */}
+      <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4 space-x-reverse">
+            <span>{t("welcomeMsg")}</span>
+            <span className="text-slate-600">|</span>
+            <span className="text-emerald-400 font-semibold">{t("support247")}</span>
           </div>
 
-          <span className="text-white/40">|</span>
+          <div className="flex items-center space-x-4 space-x-reverse">
+            {/* Language Selector Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setLangMenuOpen(!langMenuOpen)}
+                className="flex items-center space-x-1.5 space-x-reverse hover:text-white font-medium transition py-0.5 px-2 rounded bg-slate-800/80 border border-slate-700"
+              >
+                <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{LANGUAGES.find((l) => l.code === language)?.label}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
 
-          {user ? (
-            <div className="relative group flex items-center space-x-2 space-x-reverse cursor-pointer py-1">
-              <User className="w-3.5 h-3.5" />
-              <span className="font-medium">{user.name}</span>
-              {user.role === "SELLER" && (
-                <span className="bg-emerald-300 text-emerald-950 text-[10px] font-bold px-1.5 py-0.5 rounded">
-                  SELLER
-                </span>
-              )}
-              {/* Dropdown Menu */}
-              <div className="absolute left-0 ltr:right-0 ltr:left-auto top-full hidden group-hover:block bg-white text-slate-800 rounded-lg shadow-xl py-2 w-48 z-50 border border-slate-100">
-                <div className="px-4 py-2 border-b border-slate-100">
-                  <p className="text-xs font-bold text-slate-900">{user.name}</p>
-                  <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
+              {langMenuOpen && (
+                <div className="absolute top-full mt-1 ltr:right-0 rtl:left-0 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1 w-36 z-50">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code as any);
+                        setLangMenuOpen(false);
+                      }}
+                      className={`w-full text-right rtl:text-right px-3 py-1.5 text-xs font-semibold hover:bg-emerald-50 flex items-center justify-between ${
+                        language === lang.code ? "text-emerald-700 font-bold bg-emerald-50/60" : "text-slate-700"
+                      }`}
+                    >
+                      <span>{lang.label}</span>
+                      <span>{lang.flag}</span>
+                    </button>
+                  ))}
                 </div>
-                <Link href="/profile/orders" className="flex items-center space-x-2 space-x-reverse px-4 py-2 text-xs hover:bg-emerald-50 hover:text-emerald-700 font-medium">
-                  <Package className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>{t("myOrders")}</span>
-                </Link>
-                {user.role === "SELLER" && (
-                  <>
-                    <Link href="/seller" className="flex items-center space-x-2 space-x-reverse px-4 py-2 text-xs hover:bg-emerald-50 hover:text-emerald-700 font-medium">
-                      <Store className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{t("sellerDashboard")}</span>
-                    </Link>
-                    <Link href="/seller/loans" className="flex items-center space-x-2 space-x-reverse px-4 py-2 text-xs hover:bg-emerald-50 hover:text-emerald-700 font-medium">
-                      <Landmark className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{t("businessLoans")}</span>
-                    </Link>
-                  </>
-                )}
-                <button
-                  onClick={logout}
-                  className="w-full flex items-center space-x-2 space-x-reverse px-4 py-2 text-xs text-red-600 hover:bg-red-50 text-right font-medium"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>{t("logout")}</span>
-                </button>
-              </div>
+              )}
             </div>
-          ) : (
-            <div className="flex items-center space-x-3 space-x-reverse font-medium">
-              <Link href="/register" className="hover:text-white/80 transition">
-                {t("signUp")}
+
+            {/* Seller CTA */}
+            {(!user || user.role === "BUYER") && (
+              <Link
+                href="/register-seller"
+                className="flex items-center space-x-1 space-x-reverse text-emerald-400 font-semibold hover:text-emerald-300 transition"
+              >
+                <Store className="w-3.5 h-3.5" />
+                <span>{t("becomeSeller")}</span>
               </Link>
-              <span className="text-white/40">|</span>
-              <Link href="/login" className="hover:text-white/80 transition">
-                {t("login")}
+            )}
+
+            {/* Delivery Officer Portal Link */}
+            {user && (user.role === "DELIVERY_OFFICER" || user.role === "ADMIN") && (
+              <Link
+                href="/delivery"
+                className="flex items-center space-x-1 space-x-reverse text-emerald-400 font-bold hover:text-emerald-300 transition"
+              >
+                <Truck className="w-3.5 h-3.5" />
+                <span>{language === "ar" ? "لوحة التوصيل" : "Delivery Portal"}</span>
               </Link>
-            </div>
-          )}
+            )}
+
+            {/* Admin Passport Queue */}
+            {user?.role === "ADMIN" && (
+              <Link
+                href="/admin/passports"
+                className="flex items-center space-x-1 space-x-reverse text-amber-400 font-bold hover:text-amber-300 transition"
+              >
+                <FileCheck className="w-3.5 h-3.5" />
+                <span>{language === "ar" ? "تدقيق الجوازات" : "Passports Audit"}</span>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Main Bar */}
-      <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-6">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center space-x-2 space-x-reverse">
-          <div className="bg-white text-emerald-700 rounded-xl px-3 py-1 font-black text-2xl tracking-tight shadow-md border border-white/20">
-            Jusur<span className="text-slate-800">Kush</span>
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-2 space-x-reverse flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 flex items-center justify-center text-white font-black text-xl shadow-md">
+            ج
+          </div>
+          <div>
+            <span className="text-xl font-black text-slate-900 tracking-tight block leading-none">
+              جسور كوش
+            </span>
+            <span className="text-[10px] text-emerald-700 font-bold tracking-widest uppercase">
+              JusurKush
+            </span>
           </div>
         </Link>
 
-        {/* Search Bar */}
-        <form onSubmit={handleSearch} className="flex-1 max-w-2xl relative">
-          <div className="flex bg-white rounded-lg shadow-inner overflow-hidden p-1 border border-emerald-900/20">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t("searchPlaceholder")}
-              className="w-full px-4 py-2 text-slate-800 text-sm focus:outline-none placeholder:text-slate-400"
-            />
-            <button
-              type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-md font-semibold flex items-center justify-center transition shadow-sm"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-          </div>
+        {/* Search Input */}
+        <form onSubmit={handleSearch} className="flex-1 max-w-xl relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="w-full pl-10 pr-4 rtl:pr-10 rtl:pl-4 py-2 bg-slate-50 border border-slate-300 rounded-2xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+          />
+          <button
+            type="submit"
+            className="absolute ltr:right-3 rtl:left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition"
+          >
+            <Search className="w-4 h-4" />
+          </button>
         </form>
 
-        {/* Cart Icon */}
-        <Link href="/cart" className="relative p-2 hover:opacity-90 transition">
-          <ShoppingCart className="w-8 h-8 text-white drop-shadow-sm" />
-          {itemCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-white text-emerald-700 text-xs font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-emerald-700 shadow">
-              {itemCount}
-            </span>
+        {/* Action Buttons */}
+        <div className="flex items-center space-x-3 space-x-reverse">
+          {/* Cart Icon */}
+          <Link
+            href="/cart"
+            className="p-2.5 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-xl transition relative border border-slate-200"
+            title={t("cart")}
+          >
+            <ShoppingCart className="w-5 h-5" />
+          </Link>
+
+          {/* Account Menu */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center space-x-2 space-x-reverse p-1.5 px-3 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-xl font-bold text-xs hover:bg-emerald-100 transition shadow-sm"
+              >
+                <UserIcon className="w-4 h-4 text-emerald-700" />
+                <span className="max-w-[100px] truncate">{user.name}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-emerald-700" />
+              </button>
+
+              {userMenuOpen && (
+                <div className="absolute top-full mt-1 ltr:right-0 rtl:left-0 bg-white text-slate-800 rounded-2xl shadow-xl border border-slate-200 py-2 w-48 z-50 text-xs">
+                  <div className="px-4 py-2 border-b border-slate-100">
+                    <p className="font-bold text-slate-900">{user.name}</p>
+                    <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+                    <span className="text-[9px] font-black uppercase text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded mt-1 inline-block">
+                      {user.role}
+                    </span>
+                  </div>
+
+                  <Link
+                    href="/profile/orders"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold"
+                  >
+                    {t("myOrders")}
+                  </Link>
+
+                  {user.role === "SELLER" && (
+                    <Link
+                      href="/seller"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold"
+                    >
+                      {t("sellerDashboard")}
+                    </Link>
+                  )}
+
+                  {user.role === "DELIVERY_OFFICER" && (
+                    <Link
+                      href="/delivery"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold"
+                    >
+                      {language === "ar" ? "لوحة مندوب التوصيل" : "Delivery Portal"}
+                    </Link>
+                  )}
+
+                  {user.role === "ADMIN" && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2 hover:bg-slate-50 text-slate-700 font-semibold"
+                    >
+                      {t("adminPanel")}
+                    </Link>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      logout();
+                    }}
+                    className="w-full text-right rtl:text-right px-4 py-2 hover:bg-red-50 text-red-600 font-bold flex items-center space-x-2 space-x-reverse border-t border-slate-100 mt-1"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{t("logout")}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2 space-x-reverse text-xs font-bold">
+              <Link
+                href="/login"
+                className="px-3.5 py-2 text-slate-700 hover:text-emerald-700 transition"
+              >
+                {t("login")}
+              </Link>
+              <Link
+                href="/register"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm transition"
+              >
+                {t("register")}
+              </Link>
+            </div>
           )}
-        </Link>
+        </div>
       </div>
     </header>
   );

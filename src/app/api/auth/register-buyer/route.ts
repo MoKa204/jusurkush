@@ -12,6 +12,7 @@ const registerBuyerSchema = z.object({
   city: z.string().optional(),
   state: z.string().optional(),
   country: z.string().optional(),
+  passportPhoto: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, email, password, phone, street, city, state, country } = parsed.data;
+    const { name, email, password, phone, street, city, state, country, passportPhoto } = parsed.data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
@@ -49,6 +50,8 @@ export async function POST(req: Request) {
         city: city || null,
         state: state || null,
         country: country || "Sudan",
+        passportPhoto: passportPhoto || null,
+        verificationStatus: passportPhoto ? "PENDING" : "NONE",
       },
     });
 
@@ -56,6 +59,7 @@ export async function POST(req: Request) {
       userId: user.id,
       email: user.email,
       role: user.role,
+      verificationStatus: user.verificationStatus,
     });
 
     await setSessionCookie(token);
@@ -71,6 +75,8 @@ export async function POST(req: Request) {
         city: user.city,
         state: user.state,
         country: user.country,
+        passportPhoto: user.passportPhoto,
+        verificationStatus: user.verificationStatus,
       },
     });
   } catch (error) {

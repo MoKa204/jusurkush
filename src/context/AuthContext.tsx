@@ -6,17 +6,20 @@ export interface UserSession {
   id: string;
   name: string;
   email: string;
-  role: "BUYER" | "SELLER" | "ADMIN" | string;
+  role: "BUYER" | "SELLER" | "ADMIN" | "DELIVERY_OFFICER" | string;
   phone?: string | null;
   street?: string | null;
   city?: string | null;
   state?: string | null;
   country?: string | null;
+  passportPhoto?: string | null;
+  verificationStatus: "NONE" | "PENDING" | "VERIFIED" | "REJECTED" | string;
   sellerProfile?: {
     id: string;
     businessName: string;
     registrationNumber: string;
     status: "PENDING" | "APPROVED" | "REJECTED" | string;
+    passportPhoto?: string | null;
     bankName?: string;
     bankAccountName?: string;
     bankAccountNumber?: string;

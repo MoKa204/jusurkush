@@ -11,6 +11,7 @@ const registerSellerSchema = z.object({
   registrationNumber: z.string().min(3, "Business registration number is required"),
   businessAddress: z.string().min(5, "Business address is required"),
   contactInfo: z.string().min(5, "Contact info is required"),
+  passportPhoto: z.string().optional(),
   bankName: z.string().optional(),
   bankAccountName: z.string().optional(),
   bankAccountNumber: z.string().optional(),
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
       registrationNumber,
       businessAddress,
       contactInfo,
+      passportPhoto,
       bankName,
       bankAccountName,
       bankAccountNumber,
@@ -67,12 +69,15 @@ export async function POST(req: Request) {
         email: email.toLowerCase(),
         passwordHash,
         role: "SELLER",
+        passportPhoto: passportPhoto || null,
+        verificationStatus: passportPhoto ? "PENDING" : "NONE",
         sellerProfile: {
           create: {
             businessName,
             registrationNumber,
             businessAddress,
             contactInfo,
+            passportPhoto: passportPhoto || null,
             bankName: bankName || "Bank of Khartoum / Al Rajhi",
             bankAccountName: bankAccountName || `${businessName} Account`,
             bankAccountNumber: bankAccountNumber || "1002-3849-5882",
@@ -92,6 +97,7 @@ export async function POST(req: Request) {
       role: user.role,
       sellerId: user.sellerProfile?.id,
       sellerStatus: user.sellerProfile?.status,
+      verificationStatus: user.verificationStatus,
     });
 
     await setSessionCookie(token);
@@ -102,6 +108,8 @@ export async function POST(req: Request) {
         name: user.name,
         email: user.email,
         role: user.role,
+        passportPhoto: user.passportPhoto,
+        verificationStatus: user.verificationStatus,
         sellerProfile: user.sellerProfile,
       },
     });

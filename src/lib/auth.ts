@@ -13,23 +13,27 @@ export interface JWTPayload {
   role: string;
   sellerId?: string;
   sellerStatus?: string;
+  verificationStatus?: string;
 }
 
 export interface SessionUser {
   id: string;
   email: string;
   name: string;
-  role: "BUYER" | "SELLER" | "ADMIN" | string;
+  role: "BUYER" | "SELLER" | "ADMIN" | "DELIVERY_OFFICER" | string;
   phone?: string | null;
   street?: string | null;
   city?: string | null;
   state?: string | null;
   country?: string | null;
+  passportPhoto?: string | null;
+  verificationStatus: "NONE" | "PENDING" | "VERIFIED" | "REJECTED" | string;
   sellerProfile?: {
     id: string;
     businessName: string;
     registrationNumber: string;
     status: string;
+    passportPhoto?: string | null;
     bankName?: string;
     bankAccountName?: string;
     bankAccountNumber?: string;
@@ -113,12 +117,15 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       city: user.city,
       state: user.state,
       country: user.country,
+      passportPhoto: user.passportPhoto,
+      verificationStatus: user.verificationStatus,
       sellerProfile: user.sellerProfile
         ? {
             id: user.sellerProfile.id,
             businessName: user.sellerProfile.businessName,
             registrationNumber: user.sellerProfile.registrationNumber,
             status: user.sellerProfile.status,
+            passportPhoto: user.sellerProfile.passportPhoto,
             bankName: user.sellerProfile.bankName,
             bankAccountName: user.sellerProfile.bankAccountName,
             bankAccountNumber: user.sellerProfile.bankAccountNumber,

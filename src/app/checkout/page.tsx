@@ -1,426 +1,459 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { Landmark, MapPin, AlertCircle, Upload, CheckCircle2, FileCheck, X, Sparkles } from "lucide-react";
+import {
+  CreditCard,
+  Building2,
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  MapPin,
+  Sparkles,
+  ShieldCheck,
+  ShieldAlert,
+  Banknote,
+} from "lucide-react";
 
 export default function CheckoutPage() {
-  const { items, subtotal, itemCount } = useCart();
   const { user } = useAuth();
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const router = useRouter();
 
-  // Auto-populate location from customer user profile
-  const [formData, setFormData] = useState({
-    fullName: user?.name || "",
-    phone: user?.phone || "",
-    street: user?.street || "",
-    city: user?.city || "",
-    state: user?.state || "",
-    postalCode: "",
-    country: user?.country || "Sudan",
-    paymentMethod: "bank_transfer",
-  });
+  const [cart, setCart] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // Address
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("Sudan");
+
+  // Payment
+  const [paymentMethod, setPaymentMethod] = useState<"bank_transfer" | "cod">("bank_transfer");
   const [paymentProof, setPaymentProof] = useState<string>("");
-  const [uploading, setUploading] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [uploadingProof, setUploadingProof] = useState(false);
 
-  // Sync profile data when user is loaded
+  // Passport Upload State for Checkout Verification Modal
+  const [passportPhoto, setPassportPhoto] = useState<string>("");
+  const [uploadingPassport, setUploadingPassport] = useState(false);
+
   useEffect(() => {
     if (user) {
-      setFormData((prev) => ({
-        ...prev,
-        fullName: prev.fullName || user.name || "",
-        phone: prev.phone || user.phone || "",
-        street: prev.street || user.street || "",
-        city: prev.city || user.city || "",
-        state: prev.state || user.state || "",
-        country: prev.country || user.country || "Sudan",
-      }));
+      if (user.name) setFullName(user.name);
+      if (user.phone) setPhone(user.phone);
+      if (user.street) setStreet(user.street);
+      if (user.city) setCity(user.city);
+      if (user.state) setState(user.state);
+      if (user.country) setCountry(user.country);
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    fetch("/api/cart")
+      .then((res) => res.json())
+      .then((data) => setCart(data.cart || null))
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleProofUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploading(true);
-    setError("");
-
+    setUploadingProof(true);
+    setError(null);
     try {
-      const uploadData = new FormData();
-      uploadData.append("file", file);
-      uploadData.append("folder", "payment-proofs");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "payment-proofs");
 
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: uploadData,
+        body: formData,
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to upload payment proof");
+      if (!res.ok) throw new Error(data.error || "Upload failed");
 
       setPaymentProof(data.url);
     } catch (err: any) {
-      setError(err.message || "Upload failed");
+      setError(err.message);
     } finally {
-      setUploading(false);
+      setUploadingProof(false);
     }
   };
 
-  const handleCheckout = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) {
-      router.push("/login?redirect=/checkout");
-      return;
-    }
+  const handlePassportUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (!paymentProof) {
+    setUploadingPassport(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "passports");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+
+      setPassportPhoto(data.url);
+
+      // Submit to backend profile
+      await fetch("/api/profile/passport", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passportPhoto: data.url }),
+      });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setUploadingPassport(false);
+    }
+  };
+
+  const isVerified = user?.verificationStatus === "VERIFIED";
+
+  const handlePlaceOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Passport restriction enforcement for non-COD payment methods
+    if (paymentMethod === "bank_transfer" && !isVerified) {
       setError(
         language === "ar"
-          ? "يرجى إرفاق صورة إيصال التحويل البنكي لإتمام الطلب"
-          : "Please upload a photo/screenshot of your bank transfer proof"
+          ? "يتطلب الدفع المصرفي إجراء التحقق من جواز السفر أولاً. يمكنك رفع جوازك أو اختيار الدفع عند الاستلام."
+          : "Bank Transfer payment requires Passport Verification. Please upload your passport or select Cash on Delivery."
       );
       return;
     }
 
-    setError("");
-    setLoading(true);
+    if (paymentMethod === "bank_transfer" && !paymentProof) {
+      setError(
+        language === "ar"
+          ? "يرجى رفع صورة إيصال التحويل المصرفي لإتمام الطلب"
+          : "Please upload bank transfer receipt proof to complete order"
+      );
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
 
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
-          paymentProof,
+          shippingAddress: {
+            fullName,
+            phone,
+            street,
+            city,
+            state,
+            country,
+          },
+          paymentMethod,
+          paymentProof: paymentMethod === "bank_transfer" ? paymentProof : null,
         }),
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Order placement failed");
 
-      if (!res.ok) {
-        throw new Error(data.error || "Checkout failed");
-      }
-
-      router.push(`/orders/${data.orderId}`);
+      router.push(`/orders/${data.order.id}`);
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred");
+      setError(err.message);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  if (items.length === 0) {
-    return (
-      <div className="max-w-xl mx-auto my-12 bg-white p-8 rounded-2xl text-center border border-slate-200">
-        <h2 className="text-xl font-bold text-slate-800">
-          {language === "ar" ? "سلة التسوق فارغة" : "Your Cart is Empty"}
-        </h2>
-        <p className="text-xs text-slate-500 mt-2">
-          {language === "ar" ? "أضف منتجات إلى السلة قبل المتابعة للشراء." : "Add items to cart before proceeding to checkout."}
-        </p>
-      </div>
-    );
+  if (loading) {
+    return <div className="bg-white p-8 rounded-2xl border border-slate-200 animate-pulse h-64" />;
   }
 
-  // Extract unique sellers in cart for bank details
-  const uniqueSellersMap: Record<string, any> = {};
-  items.forEach((item) => {
-    const s = item.product.seller;
-    if (!uniqueSellersMap[s.id]) {
-      uniqueSellersMap[s.id] = s;
-    }
-  });
+  const items = cart?.items || [];
+  const totalAmount = items.reduce((acc: number, it: any) => acc + it.product.price * it.quantity, 0);
+  const sampleSeller = items[0]?.product?.seller;
 
   return (
-    <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Left: Auto-Filled Shipping & Bank Transfer Payment Proof */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Shipping Address */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-            <h2 className="text-base font-bold text-slate-800 flex items-center space-x-2 space-x-reverse">
-              <MapPin className="w-5 h-5 text-emerald-600" />
-              <span>{language === "ar" ? "عنوان التوصيل والشحن" : "Shipping Destination"}</span>
-            </h2>
-            {user?.street && (
-              <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-200 flex items-center space-x-1 space-x-reverse">
-                <Sparkles className="w-3 h-3 text-emerald-600" />
-                <span>{language === "ar" ? "مكتمل تلقائياً من ملفك" : "Auto-filled from profile"}</span>
-              </span>
-            )}
+    <div className="max-w-4xl mx-auto space-y-6 text-xs">
+      <h1 className="text-xl font-bold text-slate-800">
+        {language === "ar" ? "إتمام عملية الشراء والسداد" : "Checkout & Order Confirmation"}
+      </h1>
+
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl font-medium flex items-center space-x-2 space-x-reverse">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Main Details */}
+        <div className="md:col-span-2 space-y-6">
+          {/* Shipping Address */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="font-bold text-slate-800 text-sm flex items-center space-x-2 space-x-reverse">
+                <MapPin className="w-4 h-4 text-emerald-600" />
+                <span>{language === "ar" ? "عنوان وموقع التوصيل" : "Delivery Destination Address"}</span>
+              </h2>
+              {user?.city && (
+                <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-full border border-emerald-200 flex items-center space-x-1 space-x-reverse">
+                  <Sparkles className="w-3 h-3 text-emerald-600" />
+                  <span>{language === "ar" ? "مكتمل تلقائياً من ملفك" : "Auto-filled from Profile"}</span>
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-slate-600 font-semibold mb-1">
+                  {language === "ar" ? "الاسم الكامل *" : "Full Name *"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-slate-600 font-semibold mb-1">
+                  {language === "ar" ? "رقم الهاتف *" : "Phone Number *"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-slate-600 font-semibold mb-1">
+                  {language === "ar" ? "اسم الشارع والحي *" : "Street & Neighborhood *"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-slate-600 font-semibold mb-1">
+                  {language === "ar" ? "المدينة *" : "City *"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-slate-600 font-semibold mb-1">
+                  {language === "ar" ? "الولاية / المنطقة *" : "State / Region *"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs flex items-center space-x-2 space-x-reverse">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
+          {/* Payment Options */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3 flex items-center space-x-2 space-x-reverse">
+              <CreditCard className="w-4 h-4 text-emerald-600" />
+              <span>{language === "ar" ? "وسيلة وطريقة الدفع" : "Payment Options"}</span>
+            </h2>
 
-          <form id="checkout-form" onSubmit={handleCheckout} className="space-y-4 text-xs">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">
-                  {language === "ar" ? "اسم المستلم الكامل" : "Recipient Full Name"}
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  required
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-                  placeholder="محمد خالد"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">
-                  {language === "ar" ? "رقم الهاتف للتواصل" : "Contact Phone"}
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  required
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-                  placeholder="+249 912345678"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                {language === "ar" ? "اسم الشارع والحي / السكن" : "Street Address / Neighborhood"}
-              </label>
-              <input
-                type="text"
-                name="street"
-                required
-                value={formData.street}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-                placeholder="حي الخرطوم 2، شارع النيل"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">
-                  {language === "ar" ? "المدينة" : "City"}
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  required
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-                  placeholder="الخرطوم"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">
-                  {language === "ar" ? "الولاية / المنطقة" : "State"}
-                </label>
-                <input
-                  type="text"
-                  name="state"
-                  required
-                  value={formData.state}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-                  placeholder="ولاية الخرطوم"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">
-                  {language === "ar" ? "الدولة" : "Country"}
-                </label>
-                <input
-                  type="text"
-                  name="country"
-                  required
-                  value={formData.country}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-                  placeholder="السودان"
-                />
-              </div>
-            </div>
-          </form>
-        </div>
-
-        {/* Bank Transfer Details & Payment Proof Upload */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-          <h2 className="text-base font-bold text-slate-800 flex items-center space-x-2 space-x-reverse border-b border-slate-100 pb-3">
-            <Landmark className="w-5 h-5 text-emerald-600" />
-            <span>
-              {language === "ar" ? "الدفع عبر التحويل البنكي المباشر للحساب" : "Direct Bank Transfer Payment"}
-            </span>
-          </h2>
-
-          {/* Seller Bank Details Card */}
-          <div className="space-y-3">
-            <p className="text-xs text-slate-600 font-semibold">
-              {language === "ar"
-                ? "يرجى تحويل المبلغ الإجمالي إلى الحساب البنكي للبائع الموضح أدناه:"
-                : "Please transfer the total amount to the merchant's bank account specified below:"}
-            </p>
-
-            {Object.values(uniqueSellersMap).map((seller: any) => (
-              <div key={seller.id} className="bg-slate-50 p-4 rounded-xl border border-emerald-200 text-xs space-y-2">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                  <span className="font-bold text-slate-900">{seller.businessName}</span>
-                  <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">
-                    {language === "ar" ? "حساب تاجر معتمد" : "Verified Bank Account"}
+            {/* Payment Method Selector */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("bank_transfer")}
+                className={`p-4 rounded-xl border text-right rtl:text-right font-bold transition flex items-center justify-between ${
+                  paymentMethod === "bank_transfer"
+                    ? "border-emerald-600 bg-emerald-50/50 text-emerald-950"
+                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <div>
+                  <span className="block text-xs">{language === "ar" ? "تحويل مصرفي مباشر" : "Bank Transfer"}</span>
+                  <span className="text-[10px] text-slate-500 font-normal">
+                    {language === "ar" ? "يتطلب إرفاق الإيصال وجواز سفر موثق" : "Requires receipt & verified passport"}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-700">
-                  <div>
-                    <span className="text-slate-400 font-semibold text-[10px] block">
-                      {language === "ar" ? "اسم البنك" : "Bank Name"}
+                <Building2 className="w-5 h-5 text-emerald-600" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("cod")}
+                className={`p-4 rounded-xl border text-right rtl:text-right font-bold transition flex items-center justify-between ${
+                  paymentMethod === "cod"
+                    ? "border-emerald-600 bg-emerald-50/50 text-emerald-950"
+                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <div>
+                  <span className="block text-xs">{language === "ar" ? "الدفع عند الاستلام" : "Cash on Delivery"}</span>
+                  <span className="text-[10px] text-slate-500 font-normal">
+                    {language === "ar" ? "م متاح لجميع المستخدمين" : "Available for all customers"}
+                  </span>
+                </div>
+                <Banknote className="w-5 h-5 text-emerald-600" />
+              </button>
+            </div>
+
+            {/* Verification Status Warning for Non-COD */}
+            {paymentMethod === "bank_transfer" && !isVerified && (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+                <div className="flex items-center space-x-2 space-x-reverse text-amber-900 font-bold">
+                  <ShieldAlert className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                  <span>
+                    {language === "ar"
+                      ? "الدفع المصرفي يتطلب توثيق جواز السفر"
+                      : "Passport Verification Required for Bank Transfer"}
+                  </span>
+                </div>
+                <p className="text-[11px] text-amber-800">
+                  {language === "ar"
+                    ? "لحماية التعاملات المالية، يرجى رفع صورة جواز السفر أدناه أو اختيار الدفع عند الاستلام (COD)."
+                    : "To secure digital transactions, please upload your passport image below or choose Cash on Delivery."}
+                </p>
+                <div className="pt-2">
+                  <label className="inline-flex items-center space-x-2 space-x-reverse px-3 py-1.5 bg-amber-600 text-white rounded-lg font-bold cursor-pointer text-xs shadow-sm hover:bg-amber-700">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>
+                      {uploadingPassport
+                        ? language === "ar" ? "جاري الرفع..." : "Uploading..."
+                        : language === "ar" ? "رفع صورة جواز السفر" : "Upload Passport Image"}
                     </span>
-                    <span className="font-bold text-slate-900">
-                      {seller.bankName || "بنك الخرطوم / بنك الراجحي"}
+                    <input type="file" accept="image/*" onChange={handlePassportUpload} className="hidden" />
+                  </label>
+                  {passportPhoto && (
+                    <span className="text-[10px] text-emerald-800 font-bold block mt-1">
+                      {language === "ar" ? "✓ تم رفع الجواز وهو قيد التوثيق" : "✓ Passport uploaded & pending audit"}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Bank Transfer Details & Receipt Upload */}
+            {paymentMethod === "bank_transfer" && (
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                <span className="font-bold text-slate-800 block">
+                  {language === "ar" ? "بيانات الحساب المصرفي للبائع / المنصة:" : "Merchant Bank Account Details:"}
+                </span>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px]">
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <span className="text-slate-400 block">{language === "ar" ? "اسم البنك:" : "Bank Name:"}</span>
+                    <span className="font-bold text-slate-800">{sampleSeller?.bankName || "Bank of Khartoum / Al Rajhi"}</span>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200">
+                    <span className="text-slate-400 block">{language === "ar" ? "اسم الحساب:" : "Account Name:"}</span>
+                    <span className="font-bold text-slate-800">{sampleSeller?.bankAccountName || "JusurKush Merchant"}</span>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 col-span-2">
+                    <span className="text-slate-400 block">{language === "ar" ? "رقم الحساب:" : "Account Number:"}</span>
+                    <span className="font-bold text-emerald-700 tracking-wider">
+                      {sampleSeller?.bankAccountNumber || "1002-3849-5882"}
                     </span>
                   </div>
-                  <div>
-                    <span className="text-slate-400 font-semibold text-[10px] block">
-                      {language === "ar" ? "اسم صاحب الحساب" : "Account Name"}
+                </div>
+
+                {/* Upload Transfer Receipt */}
+                <div className="pt-2 border-t border-slate-200">
+                  <label className="block font-bold text-slate-700 mb-1">
+                    {language === "ar" ? "إرفاق إيصال تحويل المبلغ *" : "Attach Bank Transfer Slip Photo *"}
+                  </label>
+                  <label className="flex items-center justify-center space-x-2 space-x-reverse p-3 bg-white border border-dashed border-emerald-400 hover:bg-emerald-50/50 rounded-xl cursor-pointer font-bold text-emerald-700 text-xs shadow-sm transition">
+                    <Upload className="w-4 h-4 text-emerald-600" />
+                    <span>
+                      {uploadingProof
+                        ? language === "ar" ? "جاري رفع صورة الإيصال..." : "Uploading Receipt..."
+                        : language === "ar" ? "اضغط لرفع صورة الإيصال" : "Click to Upload Transfer Proof"}
                     </span>
-                    <span className="font-bold text-slate-900">
-                      {seller.bankAccountName || `${seller.businessName} Account`}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 font-semibold text-[10px] block">
-                      {language === "ar" ? "رقم الحساب" : "Account Number"}
-                    </span>
-                    <span className="font-mono font-bold text-emerald-800 text-sm">
-                      {seller.bankAccountNumber || "1002-3849-5882"}
-                    </span>
-                  </div>
-                  {seller.bankIBAN && (
-                    <div>
-                      <span className="text-slate-400 font-semibold text-[10px] block">IBAN / الآيبان</span>
-                      <span className="font-mono font-bold text-slate-900">{seller.bankIBAN}</span>
+                    <input type="file" accept="image/*" onChange={handleProofUpload} className="hidden" />
+                  </label>
+
+                  {paymentProof && (
+                    <div className="mt-2 flex items-center space-x-2 space-x-reverse">
+                      <img src={paymentProof} alt="Proof" className="w-12 h-12 object-cover rounded-lg border border-emerald-500 shadow" />
+                      <span className="text-[10px] text-emerald-800 font-bold flex items-center space-x-1 space-x-reverse">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>{language === "ar" ? "تم إرفاق الإيصال بنجاح" : "Receipt Proof Attached"}</span>
+                      </span>
                     </div>
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Payment Proof Photo Attachment */}
-          <div className="bg-emerald-50/50 p-5 rounded-xl border border-emerald-200/80 space-y-3">
-            <h3 className="font-bold text-slate-800 text-xs flex items-center space-x-2 space-x-reverse">
-              <FileCheck className="w-4 h-4 text-emerald-600" />
-              <span>
-                {language === "ar" ? "إرفاق صورة إيصال التحويل (إثبات الدفع)" : "Attach Photo of Payment Proof"}
-              </span>
-            </h3>
-            <p className="text-[11px] text-slate-600">
-              {language === "ar"
-                ? "قم بالتقاط صورة أو إرفاق لقطة شاشة لإشعار التحويل البنكي ليتم مراجعته وتأكيده من البائع."
-                : "Attach a screenshot or photo of your bank transfer receipt so the merchant can verify payment."}
-            </p>
-
-            {paymentProof ? (
-              <div className="relative w-40 h-28 rounded-lg overflow-hidden border-2 border-emerald-600 shadow group">
-                <img src={paymentProof} alt="Payment Proof Slip" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => setPaymentProof("")}
-                  className="absolute top-1.5 right-1.5 bg-red-600 text-white p-1 rounded-full hover:scale-110 transition"
-                  title="Remove image"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-                <div className="absolute bottom-0 inset-x-0 bg-emerald-700 text-white text-[9px] font-bold text-center py-0.5">
-                  {language === "ar" ? "تم إرفاق الإيصال بنجاح" : "Receipt Attached"}
-                </div>
-              </div>
-            ) : (
-              <label className="inline-flex items-center space-x-2 space-x-reverse px-5 py-2.5 bg-white hover:bg-emerald-50 text-emerald-700 font-bold border border-emerald-300 rounded-lg cursor-pointer transition shadow-sm text-xs">
-                <Upload className="w-4 h-4 text-emerald-600" />
-                <span>
-                  {uploading
-                    ? language === "ar" ? "جاري رفع الصورة..." : "Uploading..."
-                    : language === "ar" ? "إرفاق صورة الإشعار" : "Upload Transfer Receipt"}
-                </span>
-                <input type="file" accept="image/*" onChange={handleProofUpload} className="hidden" />
-              </label>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Right: Order Summary Sidebar */}
-      <div className="space-y-4">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-6">
-          <h3 className="font-bold text-slate-800 text-base mb-4 pb-2 border-b border-slate-100">
-            {language === "ar" ? "ملخص الطلب" : "Order Summary"}
-          </h3>
+        {/* Sidebar Summary */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit space-y-4">
+          <h2 className="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3">
+            {language === "ar" ? "ملخص الطلب والمبلغ" : "Order Summary"}
+          </h2>
 
-          {/* Item List */}
-          <div className="space-y-3 max-h-60 overflow-y-auto pr-1 mb-4 text-xs">
-            {items.map((item) => (
-              <div key={item.id} className="flex justify-between items-center text-slate-700">
-                <div className="truncate pr-2">
-                  <span className="font-semibold text-slate-900">{item.product.name}</span>
-                  <span className="text-slate-400 block text-[10px]">
-                    {item.quantity} × ${item.product.price.toFixed(2)}
-                  </span>
-                </div>
-                <span className="font-bold text-slate-900">
-                  ${(item.product.price * item.quantity).toFixed(2)}
+          <div className="divide-y divide-slate-100">
+            {items.map((it: any) => (
+              <div key={it.id} className="py-2 flex items-center justify-between text-[11px]">
+                <span className="font-medium text-slate-700 truncate max-w-[140px]">
+                  {it.product.name} (x{it.quantity})
                 </span>
+                <span className="font-bold text-slate-900">${(it.product.price * it.quantity).toFixed(2)}</span>
               </div>
             ))}
           </div>
 
-          <div className="border-t border-slate-100 pt-3 space-y-2 text-xs">
-            <div className="flex justify-between text-slate-600">
-              <span>{t("subtotal")} ({itemCount} {language === "ar" ? "منتج" : "items"})</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>{language === "ar" ? "رسوم الشحن" : "Shipping"}</span>
-              <span className="text-emerald-600 font-bold">{language === "ar" ? "مجاني" : "FREE"}</span>
-            </div>
-            <div className="flex justify-between text-slate-900 font-bold text-base pt-2 border-t border-slate-100">
-              <span>{language === "ar" ? "إجمالي المبلغ المطلوب" : "Total Payable"}</span>
-              <span className="text-emerald-700">${subtotal.toFixed(2)}</span>
+          <div className="pt-3 border-t border-slate-200 space-y-1">
+            <div className="flex justify-between font-bold text-slate-800 text-sm">
+              <span>{language === "ar" ? "المجموع الكلي:" : "Total Amount:"}</span>
+              <span className="text-emerald-700">${totalAmount.toFixed(2)}</span>
             </div>
           </div>
 
           <button
             type="submit"
-            form="checkout-form"
-            disabled={loading || uploading || !paymentProof}
-            className="w-full mt-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center space-x-2 space-x-reverse shadow disabled:opacity-50"
+            disabled={submitting}
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition disabled:opacity-50"
           >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>
-              {loading
-                ? language === "ar" ? "جاري إرسال الطلب..." : "Submitting Order..."
-                : language === "ar" ? "تاكيد وإرسال إثبات الدفع" : "Submit Order & Payment Proof"}
-            </span>
+            {submitting
+              ? language === "ar" ? "جاري معالجة الطلب..." : "Processing Order..."
+              : language === "ar" ? "تأكيد وإرسال الطلب" : "Place Order"}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
