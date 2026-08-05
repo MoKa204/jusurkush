@@ -113,8 +113,11 @@ export async function POST(req: Request) {
         sellerProfile: user.sellerProfile,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Register seller error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || "Internal server error" },
+      { status: 500 }
+    );
   }
 }
