@@ -75,6 +75,90 @@ export const DICTIONARY: Translations = {
     fr: "Déconnexion",
     tr: "Çıkış Yap",
   },
+  welcomeMsg: {
+    ar: "مرحباً بكم في منصة جسور كوش للتجارة والتمويل",
+    en: "Welcome to JusurKush E-Commerce & Financing",
+    fr: "Bienvenue sur JusurKush Commerce & Financement",
+    tr: "JusurKush E-Ticaret ve Finansman Platformuna Hoş Geldiniz",
+  },
+  support247: {
+    ar: "دعم 24/7",
+    en: "Support 24/7",
+    fr: "Support 24/7",
+    tr: "7/24 Destek",
+  },
+  becomeSeller: {
+    ar: "سجل كـ بائع",
+    en: "Become a Seller",
+    fr: "Devenir Vendeur",
+    tr: "Satıcı Ol",
+  },
+  register: {
+    ar: "التسجيل",
+    en: "Register",
+    fr: "S'inscrire",
+    tr: "Kayıt Ol",
+  },
+  cart: {
+    ar: "سلة التسوق",
+    en: "Shopping Cart",
+    fr: "Panier",
+    tr: "Sepet",
+  },
+  shoppingCart: {
+    ar: "سلة التسوق",
+    en: "Shopping Cart",
+    fr: "Panier d'Achat",
+    tr: "Alışveriş Sepeti",
+  },
+  subtotal: {
+    ar: "المجموع الفرعي",
+    en: "Subtotal",
+    fr: "Sous-total",
+    tr: "Ara Toplam",
+  },
+  proceedCheckout: {
+    ar: "متابعة لإتمام الشراء",
+    en: "Proceed to Checkout",
+    fr: "Passer la Commande",
+    tr: "Ödemeye Geç",
+  },
+  verifiedMerchant: {
+    ar: "تاجر معتمد",
+    en: "Verified Merchant",
+    fr: "Commerçant Vérifié",
+    tr: "Doğrulanmış Satıcı",
+  },
+  addToCart: {
+    ar: "أضف للسلة",
+    en: "Add to Cart",
+    fr: "Ajouter au Panier",
+    tr: "Sepete Ekle",
+  },
+  outOfStock: {
+    ar: "نفدت الكمية",
+    en: "Out of Stock",
+    fr: "Rupture de Stock",
+    tr: "Stokta Yok",
+  },
+  emptyTitle: {
+    ar: "لا توجد عناصر",
+    en: "No Items Found",
+    fr: "Aucun Élément Trouvé",
+    tr: "Öğe Bulunamadı",
+  },
+  emptyDesc: {
+    ar: "لم يتم العثور على أي نتائج مطابقة",
+    en: "No matching results were found",
+    fr: "Aucun résultat correspondant",
+    tr: "Eşleşen sonuç bulunamadı",
+  },
+  regSellerBtn: {
+    ar: "التسجيل كـ بائع",
+    en: "Register as Seller",
+    fr: "S'inscrire comme Vendeur",
+    tr: "Satıcı Olarak Kaydol",
+  },
 
   // Auth Forms
   welcomeBack: {
