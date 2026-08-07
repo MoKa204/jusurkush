@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, X, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AddProductPage() {
+  const { t, language } = useLanguage();
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
@@ -64,7 +66,7 @@ export default function AddProductPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (images.length === 0) {
-      setError("Please upload at least one product image");
+      setError(t("uploadAtLeastOneImg"));
       return;
     }
 
@@ -102,11 +104,11 @@ export default function AddProductPage() {
   return (
     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-6">
       <h1 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-3">
-        Add New Merchant Product
+        {t("addNewProductTitle")}
       </h1>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs flex items-center space-x-2">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs flex items-center space-x-2 space-x-reverse">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -114,19 +116,19 @@ export default function AddProductPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         <div>
-          <label className="block font-semibold text-slate-700 mb-1">Product Title</label>
+          <label className="block font-semibold text-slate-700 mb-1">{t("productTitle")}</label>
           <input
             type="text"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-            placeholder="e.g. Ergonomic Bluetooth Wireless Headphones"
+            placeholder={language === "ar" ? "مثال: هاتف سامسونج جالاكسي S24 ألترا" : "e.g. Ergonomic Wireless Headphones"}
           />
         </div>
 
         <div>
-          <label className="block font-semibold text-slate-700 mb-1">Category Taxonomy</label>
+          <label className="block font-semibold text-slate-700 mb-1">{t("categoryTaxonomy")}</label>
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -142,7 +144,7 @@ export default function AddProductPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Unit Price ($ USD)</label>
+            <label className="block font-semibold text-slate-700 mb-1">{t("unitPriceUSD")}</label>
             <input
               type="number"
               step="0.01"
@@ -154,7 +156,7 @@ export default function AddProductPage() {
             />
           </div>
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Available Stock Units</label>
+            <label className="block font-semibold text-slate-700 mb-1">{t("stockUnits")}</label>
             <input
               type="number"
               required
@@ -167,20 +169,24 @@ export default function AddProductPage() {
         </div>
 
         <div>
-          <label className="block font-semibold text-slate-700 mb-1">Detailed Description</label>
+          <label className="block font-semibold text-slate-700 mb-1">{t("detailedDescription")}</label>
           <textarea
             rows={4}
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-            placeholder="Describe product features, technical specifications, and box contents..."
+            placeholder={
+              language === "ar"
+                ? "اكتب تفاصيل ومواصفات المنتج، الضمان، ومحتويات العلبة..."
+                : "Describe product features, technical specifications, and box contents..."
+            }
           />
         </div>
 
         {/* Image Upload Area */}
         <div>
-          <label className="block font-semibold text-slate-700 mb-2">Product Images</label>
+          <label className="block font-semibold text-slate-700 mb-2">{t("productImages")}</label>
           <div className="flex flex-wrap gap-3 mb-3">
             {images.map((url, idx) => (
               <div key={idx} className="relative w-20 h-20 rounded-lg border border-slate-300 overflow-hidden group">
@@ -197,13 +203,10 @@ export default function AddProductPage() {
 
             <label className="w-20 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-emerald-600 flex flex-col items-center justify-center text-slate-500 hover:text-emerald-600 cursor-pointer transition">
               <Upload className="w-5 h-5 mb-1" />
-              <span className="text-[10px] font-bold">{uploading ? "Uploading..." : "Upload"}</span>
+              <span className="text-[10px] font-bold">{uploading ? t("uploading") : t("uploadPassportNow")}</span>
               <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
             </label>
           </div>
-          <p className="text-[10px] text-slate-400">
-            Files are saved through the StorageService interface.
-          </p>
         </div>
 
         <button
@@ -211,7 +214,7 @@ export default function AddProductPage() {
           disabled={submitting || uploading}
           className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition disabled:opacity-50 text-xs shadow"
         >
-          {submitting ? "Publishing Product..." : "Publish Product Live"}
+          {submitting ? t("publishingProduct") : t("publishProductLive")}
         </button>
       </form>
     </div>

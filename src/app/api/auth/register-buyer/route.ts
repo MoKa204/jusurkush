@@ -28,9 +28,10 @@ export async function POST(req: Request) {
     }
 
     const { name, email, password, phone, street, city, state, country, passportPhoto } = parsed.data;
+    const cleanEmail = email.trim().toLowerCase();
 
     const existingUser = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
+      where: { email: cleanEmail },
     });
 
     if (existingUser) {
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
     const user = await prisma.user.create({
       data: {
         name,
-        email: email.toLowerCase(),
+        email: cleanEmail,
         passwordHash,
         role: "BUYER",
         phone: phone || null,

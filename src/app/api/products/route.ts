@@ -10,9 +10,24 @@ export async function GET(req: Request) {
     const query = searchParams.get("q");
     const sort = searchParams.get("sort") || "newest";
 
+    // Check & auto-suspend sellers whose unpaid commission is overdue > 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    await prisma.sellerProfile.updateMany({
+      where: {
+        unpaidCommission: { gt: 0 },
+        commissionOverdueSince: { lte: sevenDaysAgo },
+        isSuspendedForFee: false,
+      },
+      data: {
+        isSuspendedForFee: true,
+        status: "SUSPENDED",
+      },
+    });
+
     const whereClause: any = {
       seller: {
         status: "APPROVED",
+        isSuspendedForFee: false,
       },
     };
 

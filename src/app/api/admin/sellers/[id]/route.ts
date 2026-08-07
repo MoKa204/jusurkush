@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/auth";
 
 const updateSellerStatusSchema = z.object({
-  status: z.enum(["APPROVED", "REJECTED", "PENDING"]),
+  status: z.enum(["APPROVED", "REJECTED", "PENDING", "SUSPENDED"]),
 });
 
 export async function PATCH(
@@ -26,9 +26,18 @@ export async function PATCH(
 
     const { status } = parsed.data;
 
+    const dataToUpdate: any = { status };
+    if (status === "APPROVED") {
+      dataToUpdate.isSuspendedForFee = false;
+      dataToUpdate.unpaidCommission = 0;
+      dataToUpdate.commissionOverdueSince = null;
+    } else if (status === "SUSPENDED") {
+      dataToUpdate.isSuspendedForFee = true;
+    }
+
     const updatedSeller = await prisma.sellerProfile.update({
       where: { id: params.id },
-      data: { status },
+      data: dataToUpdate,
     });
 
     return NextResponse.json({ seller: updatedSeller, success: true });

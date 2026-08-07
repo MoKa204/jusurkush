@@ -44,9 +44,10 @@ export async function POST(req: Request) {
       bankAccountNumber,
       bankIBAN,
     } = parsed.data;
+    const cleanEmail = email.trim().toLowerCase();
 
     const existingUser = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
+      where: { email: cleanEmail },
     });
 
     if (existingUser) {
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
     const user = await prisma.user.create({
       data: {
         name,
-        email: email.toLowerCase(),
+        email: cleanEmail,
         passwordHash,
         role: "SELLER",
         passportPhoto: passportPhoto || null,
@@ -82,7 +83,7 @@ export async function POST(req: Request) {
             bankAccountName: bankAccountName || `${businessName} Account`,
             bankAccountNumber: bankAccountNumber || "1002-3849-5882",
             bankIBAN: bankIBAN || null,
-            status: "PENDING",
+            status: "APPROVED",
           },
         },
       },

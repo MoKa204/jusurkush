@@ -245,9 +245,7 @@ export default function RegisterSellerPage() {
         <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200 space-y-3">
           <h3 className="font-bold text-slate-800 text-xs border-b border-amber-200 pb-2 flex items-center space-x-2 space-x-reverse">
             <ShieldCheck className="w-4 h-4 text-amber-600" />
-            <span>
-              3. {language === "ar" ? "توثيق الهوية / صورة جواز السفر (إلزامي للتحقق)" : "Identity Verification / Passport Photo (Required for KYC Audit)"}
-            </span>
+            <span>3. {t("identityVerificationStep")}</span>
           </h3>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -255,33 +253,31 @@ export default function RegisterSellerPage() {
               <div className="relative w-36 h-24 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-sm flex-shrink-0">
                 <img src={passportPhoto} alt="Passport Preview" className="w-full h-full object-cover" />
                 <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold shadow">
-                  ✓ {language === "ar" ? "تم الرفع" : "Uploaded"}
+                  ✓ {t("uploaded")}
                 </span>
               </div>
             ) : (
               <div className="w-36 h-24 bg-white rounded-xl border-2 border-dashed border-amber-300 flex flex-col items-center justify-center text-amber-600 text-[10px] gap-1 flex-shrink-0">
                 <Upload className="w-5 h-5 text-amber-500" />
-                <span>{language === "ar" ? "لم تتم الإضافة" : "No photo uploaded"}</span>
+                <span>{t("uploadPassportNow")}</span>
               </div>
             )}
 
             <div className="flex-1 space-y-1 text-center sm:text-right rtl:sm:text-right">
               <label className="block font-bold text-slate-800 text-xs">
-                {language === "ar" ? "رفع صورة جواز السفر أو الهوية الوطنية" : "Upload Passport or ID Photo"}
+                {t("identityVerificationStep")}
               </label>
               <p className="text-[11px] text-slate-500">
-                {language === "ar"
-                  ? "تخضع بيانات جواز السفر لمراجعة الإدارة للتحقق من هوية البائع وتدقيق الحساب قبل اعتماد المنتجات."
-                  : "Submitted passport photos are audited by admins to verify merchant identity."}
+                {t("passportUploadHelp")}
               </p>
               <label className="inline-flex items-center space-x-2 space-x-reverse px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl cursor-pointer text-xs transition mt-2 shadow-sm">
                 <Upload className="w-3.5 h-3.5" />
                 <span>
                   {uploadingPassport
-                    ? language === "ar" ? "جاري الرفع..." : "Uploading..."
+                    ? t("uploading")
                     : passportPhoto
-                    ? language === "ar" ? "تغيير صورة الجواز" : "Change Passport Photo"
-                    : language === "ar" ? "رفع صورة الجواز الآن" : "Upload Passport Image"}
+                    ? t("changePassportPhoto")
+                    : t("uploadPassportNow")}
                 </span>
                 <input type="file" accept="image/*" onChange={handlePassportUpload} className="hidden" />
               </label>

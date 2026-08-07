@@ -6,12 +6,12 @@ import { Package, DollarSign, ShoppingBag, Landmark, PlusCircle } from "lucide-r
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function SellerOverviewPage() {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
     totalRevenue: 0,
-    loanStatus: "NO_LOAN",
+    loanStatus: "NONE",
   });
   const [loading, setLoading] = useState(true);
 
@@ -53,14 +53,8 @@ export default function SellerOverviewPage() {
       {/* Top Banner */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">
-            {language === "ar" ? "لوحة تحكم البائع والنشاط" : "Seller Performance Overview"}
-          </h1>
-          <p className="text-xs text-slate-500">
-            {language === "ar"
-              ? "متابعة المبيعات، المنتجات الحية، وإشعارات التحويل البنكي"
-              : "Track product listings, sales revenue, and financing applications"}
-          </p>
+          <h1 className="text-xl font-bold text-slate-800">{t("sellerPerfOverview")}</h1>
+          <p className="text-xs text-slate-500 mt-0.5">{t("sellerPerfSub")}</p>
         </div>
 
         <Link
@@ -68,7 +62,7 @@ export default function SellerOverviewPage() {
           className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition flex items-center space-x-1.5 space-x-reverse shadow"
         >
           <PlusCircle className="w-4 h-4" />
-          <span>{language === "ar" ? "إضافة منتج جديد" : "Add Product"}</span>
+          <span>{t("addProduct")}</span>
         </Link>
       </div>
 
@@ -76,9 +70,7 @@ export default function SellerOverviewPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">
-              {language === "ar" ? "إجمالي المبيعات والأرباح" : "Total Sales Revenue"}
-            </span>
+            <span className="text-xs text-slate-500 font-semibold">{t("totalSalesRevenue")}</span>
             <DollarSign className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-2xl font-black text-slate-900">${stats.totalRevenue.toFixed(2)}</span>
@@ -86,9 +78,7 @@ export default function SellerOverviewPage() {
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">
-              {language === "ar" ? "الطلبات الواردة" : "Orders Received"}
-            </span>
+            <span className="text-xs text-slate-500 font-semibold">{t("ordersReceivedCount")}</span>
             <ShoppingBag className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-2xl font-black text-slate-900">{stats.totalOrders}</span>
@@ -96,9 +86,7 @@ export default function SellerOverviewPage() {
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">
-              {language === "ar" ? "المنتجات النشطة" : "Active Listings"}
-            </span>
+            <span className="text-xs text-slate-500 font-semibold">{t("activeListingsCount")}</span>
             <Package className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-2xl font-black text-slate-900">{stats.totalProducts}</span>
@@ -106,9 +94,7 @@ export default function SellerOverviewPage() {
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">
-              {language === "ar" ? "حالة طلب التمويل" : "Loan Status"}
-            </span>
+            <span className="text-xs text-slate-500 font-semibold">{t("loanStatus")}</span>
             <Landmark className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-sm font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 inline-block uppercase">

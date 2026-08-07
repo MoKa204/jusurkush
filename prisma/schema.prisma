@@ -20,6 +20,8 @@ model User {
   country            String?
   passportPhoto      String?           // Photo of user passport for KYC verification
   verificationStatus String            @default("NONE") // NONE, PENDING, VERIFIED, REJECTED
+  resetCode          String?           // 6-digit password reset verification code
+  resetCodeExpires   DateTime?         // Verification code expiration timestamp
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
   
@@ -45,13 +47,29 @@ model SellerProfile {
   bankAccountName    String            @default("JusurKush Merchant Account")
   bankAccountNumber  String            @default("1002-3849-5882")
   bankIBAN           String?           @default("SD12340000100238495882")
-  status             String            @default("PENDING") // PENDING, APPROVED, REJECTED
+  status             String            @default("APPROVED") // PENDING, APPROVED, REJECTED, SUSPENDED
+  commissionRate     Float             @default(0.05) // 5% fee on sales after 2 months
+  unpaidCommission   Float             @default(0.0)  // Accumulated unpaid commission balance
+  commissionOverdueSince DateTime?     // Set when unpaid balance exists
+  isSuspendedForFee  Boolean           @default(false)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
 
   products           Product[]
   orderItems         OrderItem[]
   loanApplications   LoanApplication[]
+  commissionPayments CommissionPayment[]
+}
+
+model CommissionPayment {
+  id            String        @id @default(uuid())
+  sellerId      String
+  seller        SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  amount        Float
+  paymentProof  String
+  status        String        @default("PENDING") // PENDING, VERIFIED, REJECTED
+  createdAt     DateTime      @default(now())
+  verifiedAt    DateTime?
 }
 
 model Category {

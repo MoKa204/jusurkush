@@ -107,12 +107,33 @@ export async function POST(req: Request) {
         },
       });
 
-      // 2. Decrement Product Stock
+      // 2. Decrement Product Stock & Calculate Commission for Sellers past 60-day trial
+      const now = new Date();
       for (const item of cart.items) {
         await tx.product.update({
           where: { id: item.productId },
           data: { stock: { decrement: item.quantity } },
         });
+
+        const seller = item.product.seller;
+        if (seller) {
+          const createdAt = new Date(seller.createdAt);
+          const daysOld = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+
+          // If seller registered more than 60 days ago (2 months trial ended)
+          if (daysOld > 60) {
+            const feeRate = seller.commissionRate || 0.05;
+            const feeAmount = item.product.price * item.quantity * feeRate;
+
+            await tx.sellerProfile.update({
+              where: { id: seller.id },
+              data: {
+                unpaidCommission: { increment: feeAmount },
+                commissionOverdueSince: seller.commissionOverdueSince ? undefined : now,
+              },
+            });
+          }
+        }
       }
 
       // 3. Clear Cart
