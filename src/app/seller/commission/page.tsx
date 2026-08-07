@@ -7,7 +7,7 @@ import {
   CheckCircle,
   AlertTriangle,
   Upload,
-  DollarSign,
+  Banknote,
   ShieldCheck,
   Building2,
   FileCheck,
@@ -109,16 +109,18 @@ export default function SellerCommissionPage() {
     return <div className="bg-white p-8 rounded-2xl border border-slate-200 animate-pulse h-96" />;
   }
 
+  const ratePercentage = data?.commissionRate ? Math.round(data.commissionRate * 100) : 3;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-xs">
       {/* Header Banner */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-slate-800">{t("commissionBannerTitle")}</h1>
           <p className="text-xs text-slate-500 mt-1">
             {language === "ar"
-              ? "متابعة فترة التجربة المجانية (الشهرين)، العمولات المستحقة، وسداد الفواتير عبر البنك"
-              : "Track your 2-month free trial, unpaid sales commission, and bank transfer receipts"}
+              ? "متابعة فترة التجربة المجانية (الشهرين)، العمولات المستحقة (3%)، وسداد الفواتير عبر البنك"
+              : "Track your 2-month free trial, unpaid sales commission (3%), and bank transfer receipts"}
           </p>
         </div>
         <div className="p-3 bg-emerald-100 text-emerald-800 rounded-full">
@@ -147,8 +149,8 @@ export default function SellerCommissionPage() {
               <p className="mt-0.5 text-emerald-800">{t("freeTrialDesc")}</p>
             </div>
           </div>
-          <div className="text-center bg-white px-4 py-2 rounded-xl border border-emerald-300 font-extrabold text-emerald-800 shadow-xs">
-            <span className="text-xl font-black block text-emerald-600">{data.trialDaysRemaining}</span>
+          <div className="text-center bg-white px-4 py-2.5 rounded-xl border border-emerald-300 font-extrabold text-emerald-800 shadow-xs min-w-[120px]">
+            <span className="text-2xl font-black block text-emerald-700 font-mono">{data?.trialDaysRemaining ?? 60}</span>
             <span className="text-[10px] block uppercase">{t("trialRemainingDays")}</span>
           </div>
         </div>
@@ -173,12 +175,15 @@ export default function SellerCommissionPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-xs text-slate-500 font-semibold block mb-1">{t("unpaidCommissionBalance")}</span>
-          <span className="text-2xl font-black text-slate-900">${data?.unpaidCommission?.toFixed(2) || "0.00"}</span>
+          <span className="text-2xl font-black text-slate-900 font-mono">
+            {language === "ar" ? "ج.س " : "SDG "}
+            {(data?.unpaidCommission || 0).toLocaleString()}
+          </span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-xs text-slate-500 font-semibold block mb-1">{t("commissionRateLabel")}</span>
-          <span className="text-2xl font-black text-emerald-600">{(data?.commissionRate * 100).toFixed(0)}%</span>
+          <span className="text-2xl font-black text-emerald-600 font-mono">{ratePercentage}%</span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -258,19 +263,19 @@ export default function SellerCommissionPage() {
           <form onSubmit={handleSubmitProof} className="space-y-4">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                {language === "ar" ? "مبلغ التحويل البنكي ($ USD)" : "Transfer Amount ($ USD)"}
+                {language === "ar" ? "مبلغ التحويل البنكي (ج.س / SDG)" : "Transfer Amount (SDG)"}
               </label>
               <div className="relative">
                 <input
                   type="number"
-                  step="0.01"
+                  step="1"
                   required
                   value={paymentAmount}
                   onChange={(e) => setPaymentAmount(e.target.value)}
-                  className="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 font-bold"
-                  placeholder="0.00"
+                  className="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 font-bold font-mono"
+                  placeholder="0"
                 />
-                <DollarSign className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5" />
+                <Banknote className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5" />
               </div>
             </div>
 
@@ -327,7 +332,10 @@ export default function SellerCommissionPage() {
             {data?.payments?.map((pm: any) => (
               <div key={pm.id} className="p-4 flex items-center justify-between">
                 <div>
-                  <span className="font-extrabold text-slate-900">${pm.amount.toFixed(2)}</span>
+                  <span className="font-extrabold text-slate-900 font-mono">
+                    {language === "ar" ? "ج.س " : "SDG "}
+                    {pm.amount.toLocaleString()}
+                  </span>
                   <span className="text-slate-400 text-[10px] block mt-0.5">
                     {new Date(pm.createdAt).toLocaleString()}
                   </span>

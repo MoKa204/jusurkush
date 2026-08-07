@@ -132,7 +132,7 @@ export async function POST(req: Request) {
 
           // If seller registered more than 60 days ago (2 months trial ended)
           if (daysOld > 60) {
-            const feeRate = seller.commissionRate || 0.05;
+            const feeRate = seller.commissionRate || 0.03;
             const feeAmount = item.product.price * item.quantity * feeRate;
 
             await tx.sellerProfile.update({

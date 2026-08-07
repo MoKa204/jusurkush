@@ -61,6 +61,16 @@ export default function ProductDetailPage() {
     activeImage.startsWith("data:")
   );
 
+  const stockNumber = typeof product.stock === "number" ? product.stock : parseInt(String(product.stock || 99), 10) || 99;
+
+  const handleIncrement = () => {
+    setQuantity((prev) => Math.min(stockNumber > 0 ? stockNumber : 99, prev + 1));
+  };
+
+  const handleDecrement = () => {
+    setQuantity((prev) => Math.max(1, prev - 1));
+  };
+
   const handleAddToCart = async () => {
     await addToCart(product.id, quantity);
     setAdded(true);
@@ -145,12 +155,12 @@ export default function ProductDetailPage() {
               <span className="text-slate-500 font-medium">Availability:</span>
               <span
                 className={`font-bold px-2.5 py-0.5 rounded-full ${
-                  product.stock > 0
+                  stockNumber > 0
                     ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                     : "bg-red-50 text-red-700 border border-red-200"
                 }`}
               >
-                {product.stock > 0 ? `Units ${product.stock} Available` : "Out of Stock"}
+                {stockNumber > 0 ? `Units ${stockNumber} Available` : "Out of Stock"}
               </span>
             </div>
 
@@ -171,19 +181,21 @@ export default function ProductDetailPage() {
           {/* Add to Cart Footer Actions */}
           <div className="pt-4 border-t border-slate-100 space-y-3">
             <div className="flex items-center space-x-3 space-x-reverse">
-              <div className="flex items-center border border-slate-300 rounded-xl overflow-hidden">
+              <div className="flex items-center border border-slate-300 rounded-xl overflow-hidden bg-white shadow-xs">
                 <button
                   type="button"
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                  onClick={handleDecrement}
+                  className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm select-none transition"
                 >
                   -
                 </button>
-                <span className="px-4 py-2 font-bold text-slate-800">{quantity}</span>
+                <span className="px-4 py-2 font-bold text-slate-900 text-sm select-none min-w-[2.5rem] text-center font-mono">
+                  {quantity}
+                </span>
                 <button
                   type="button"
-                  onClick={() => setQuantity((q) => Math.min(product.stock || 99, q + 1))}
-                  className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                  onClick={handleIncrement}
+                  className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm select-none transition"
                 >
                   +
                 </button>
@@ -192,7 +204,7 @@ export default function ProductDetailPage() {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={product.stock <= 0}
+                disabled={stockNumber <= 0}
                 className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition flex items-center justify-center space-x-2 space-x-reverse shadow disabled:opacity-50"
               >
                 <ShoppingCart className="w-4 h-4" />

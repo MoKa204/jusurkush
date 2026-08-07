@@ -585,7 +585,7 @@ export const DICTIONARY: Translations = {
   freeTrialDesc: { ar: "حسابك في فترة التجربة المجانية لمدة 60 يوماً. لا توجد أي عمولات مستحقة على مبيعاتك خلال هذه الفترة.", en: "Your account is in the 60-day free trial period. No commission is charged on sales during this trial.", fr: "Votre compte est en période d'essai gratuite de 60 jours.", tr: "Hesabınız 60 günlük ücretsiz deneme süresindedir." },
   trialRemainingDays: { ar: "يوم متبقي في التجربة المجانية", en: "days remaining in free trial", fr: "jours restants d'essai gratuit", tr: "gün kaldı" },
   unpaidCommissionBalance: { ar: "رصيد العمولة المستحقة للمنصة", en: "Unpaid Commission Balance", fr: "Solde de Commission Dû", tr: "Ödenmemiş Komisyon Bakiyesi" },
-  commissionRateLabel: { ar: "نسبة عمولة المنصة (بعد التجربة)", en: "Platform Commission Rate (5%)", fr: "Taux de Commission (5%)", tr: "Komisyon Oranı (%5)" },
+  commissionRateLabel: { ar: "نسبة عمولة المنصة (3%)", en: "Platform Commission Rate (3%)", fr: "Taux de Commission (3%)", tr: "Komisyon Oranı (%3)" },
   gracePeriodNotice: { ar: "مهلة السداد (7 أيام)", en: "Grace Period (7 Days)", fr: "Délai de Paiement (7 Jours)", tr: "Ödeme Süresi (7 Gün)" },
   overdueSuspensionWarning: {
     ar: "تنبيه: يتوجب تحويل مبلغ العمولة المستحقة قبل انقضاء مهلة الـ 7 أيام لتجنب إيقاف الحساب وتعليق ظهور منتجاتك للمشترين.",

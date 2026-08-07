@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, Banknote, ShoppingBag, Landmark, PlusCircle } from "lucide-react";
+import { Package, Banknote, ShoppingBag, Landmark, PlusCircle, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function SellerOverviewPage() {
@@ -68,42 +68,72 @@ export default function SellerOverviewPage() {
 
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        {/* Total Sales Revenue Card */}
+        <Link
+          href="/seller/commission"
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-500 hover:shadow-md transition group block"
+        >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">{t("totalSalesRevenue")}</span>
+            <span className="text-xs text-slate-500 font-semibold group-hover:text-emerald-700 transition">
+              {t("totalSalesRevenue")}
+            </span>
             <Banknote className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-xl font-black text-slate-900 font-mono">
+          <span className="text-xl font-black text-slate-900 font-mono block">
             {language === "ar" ? "ج.س " : "SDG "}
             {stats.totalRevenue.toLocaleString()}
           </span>
-        </div>
+        </Link>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        {/* Incoming Orders Card -> Link to /seller/orders */}
+        <Link
+          href="/seller/orders"
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-500 hover:shadow-md transition group block relative"
+        >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">{t("ordersReceivedCount")}</span>
+            <span className="text-xs text-slate-500 font-semibold group-hover:text-emerald-700 transition">
+              {t("ordersReceivedCount")}
+            </span>
             <ShoppingBag className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-2xl font-black text-slate-900 font-mono">{stats.totalOrders}</span>
-        </div>
+          <div className="flex items-center justify-between">
+            <span className="text-2xl font-black text-slate-900 font-mono">{stats.totalOrders}</span>
+            <span className="text-[10px] text-emerald-700 font-bold flex items-center space-x-0.5 space-x-reverse group-hover:underline">
+              <span>{language === "ar" ? "عرض الطلبات" : "View Orders"}</span>
+              <ArrowLeft className="w-3 h-3 rtl:rotate-0 rotate-180" />
+            </span>
+          </div>
+        </Link>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        {/* Active Products Card -> Link to /seller/products */}
+        <Link
+          href="/seller/products"
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-500 hover:shadow-md transition group block"
+        >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">{t("activeListingsCount")}</span>
+            <span className="text-xs text-slate-500 font-semibold group-hover:text-emerald-700 transition">
+              {t("activeListingsCount")}
+            </span>
             <Package className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-2xl font-black text-slate-900 font-mono">{stats.totalProducts}</span>
-        </div>
+        </Link>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        {/* Loan Request Status Card -> Link to /seller/loans */}
+        <Link
+          href="/seller/loans"
+          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-500 hover:shadow-md transition group block"
+        >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-slate-500 font-semibold">{t("loanStatus")}</span>
+            <span className="text-xs text-slate-500 font-semibold group-hover:text-emerald-700 transition">
+              {t("loanStatus")}
+            </span>
             <Landmark className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 inline-block uppercase">
             {stats.loanStatus}
           </span>
-        </div>
+        </Link>
       </div>
     </div>
   );

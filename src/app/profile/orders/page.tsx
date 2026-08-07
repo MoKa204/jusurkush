@@ -8,7 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 const RETURN_REASONS_AR = [
   "منتج تالف أو مكسور",
-  "وصل منتج مختلف عن المطلق",
+  "وصل منتج مختلف عن المطلوب",
   "أجزاء أو ملحقات مفقودة",
   "معيب أو لا يعمل بشكل صحيح",
   "المقاس أو المواصفات غير مطابقة",
@@ -208,6 +208,11 @@ export default function CustomerOrdersPage() {
 
   const returnReasons = language === "ar" ? RETURN_REASONS_AR : RETURN_REASONS_EN;
 
+  // Show Passport KYC Prompt Card ONLY for unverified buyer accounts
+  const isSeller = user?.role === "SELLER";
+  const isVerified = user?.verificationStatus === "VERIFIED";
+  const showPassportPrompt = !isSeller && !isVerified;
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 text-xs">
       {/* Header Profile Title */}
@@ -215,98 +220,90 @@ export default function CustomerOrdersPage() {
         <div>
           <h1 className="text-xl font-bold text-slate-800 flex items-center space-x-2 space-x-reverse">
             <Package className="w-5 h-5 text-emerald-600" />
-            <span>{language === "ar" ? "الملف الشخصي وسجل المشتريات" : "My Profile & Purchases"}</span>
+            <span>{language === "ar" ? "سجل المشتريات والطلبات" : "My Purchase History & Orders"}</span>
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mt-0.5">
             {language === "ar"
-              ? "إدارة توثيق الهوية والجواز، استعراض المشتريات، وإرجاع المنتجات"
-              : "Manage identity verification, passport KYC, purchase history, and product returns"}
+              ? "استعراض مشترياتك السابقة، متابعة الشحنات، وتقديم طلبات إرجاع المنتجات"
+              : "Review past purchases, track order deliveries, and manage product returns"}
           </p>
         </div>
       </div>
 
-      {/* User Passport KYC Verification Card */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-          <div>
-            <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2 space-x-reverse">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
-              <span>{language === "ar" ? "توثيق الهوية وجواز السفر (KYC)" : "Passport KYC & Identity Verification"}</span>
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              {language === "ar"
-                ? "توثيق جواز السفر يتيح إجراء عمليات التحويل المصرفي المباشر وحماية المشتريات"
-                : "Passport verification enables instant direct bank transfers and buyer protection"}
-            </p>
-          </div>
+      {/* User Passport KYC Verification Card (Only shown if unverified buyer) */}
+      {showPassportPrompt && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <h2 className="text-base font-bold text-slate-900 flex items-center space-x-2 space-x-reverse">
+                <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                <span>{language === "ar" ? "توثيق الهوية وجواز السفر (KYC)" : "Passport KYC & Identity Verification"}</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {language === "ar"
+                  ? "توثيق جواز السفر يتيح إجراء عمليات التحويل المصرفي المباشر وحماية المشتريات"
+                  : "Passport verification enables instant direct bank transfers and buyer protection"}
+              </p>
+            </div>
 
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                user?.verificationStatus === "VERIFIED"
-                  ? "bg-emerald-50 border-emerald-300 text-emerald-700"
-                  : user?.verificationStatus === "PENDING"
-                  ? "bg-amber-50 border-amber-300 text-amber-800"
-                  : "bg-slate-100 border-slate-300 text-slate-600"
-              }`}
-            >
-              {user?.verificationStatus === "VERIFIED"
-                ? language === "ar" ? "✓ حساب موثق بالكامل" : "✓ Fully Verified"
-                : user?.verificationStatus === "PENDING"
-                ? language === "ar" ? "⏳ قيد مراجعة الإدارة" : "⏳ Pending Audit"
-                : language === "ar" ? "غير موثق بعد" : "Not Verified"}
-            </span>
-          </div>
-        </div>
-
-        {passportSuccess && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center space-x-2 space-x-reverse">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-            <span>{passportSuccess}</span>
-          </div>
-        )}
-
-        <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-          {passportPhoto || user?.passportPhoto ? (
-            <div className="relative w-40 h-24 rounded-xl overflow-hidden border-2 border-emerald-500 shadow-sm flex-shrink-0">
-              <img src={passportPhoto || user?.passportPhoto || ""} alt="Passport Photo" className="w-full h-full object-cover" />
-              <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded font-bold shadow">
-                {user?.verificationStatus === "VERIFIED" ? "✓ Verified" : "Pending"}
+            <div className="flex items-center space-x-2 space-x-reverse">
+              <span className="px-3 py-1 rounded-full text-xs font-bold border bg-slate-100 border-slate-300 text-slate-600">
+                {user?.verificationStatus === "PENDING"
+                  ? language === "ar" ? "⏳ قيد مراجعة الإدارة" : "⏳ Pending Audit"
+                  : language === "ar" ? "غير موثق بعد" : "Not Verified"}
               </span>
             </div>
-          ) : (
-            <div className="w-40 h-24 bg-white rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1 flex-shrink-0">
-              <Upload className="w-6 h-6 text-slate-400" />
-              <span>{language === "ar" ? "لا توجد صورة" : "No Passport Uploaded"}</span>
+          </div>
+
+          {passportSuccess && (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center space-x-2 space-x-reverse">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+              <span>{passportSuccess}</span>
             </div>
           )}
 
-          <div className="flex-1 space-y-2 text-center sm:text-right rtl:sm:text-right">
-            <div>
-              <p className="font-bold text-slate-800 text-xs">
-                {language === "ar" ? "صورة جواز السفر المعتمدة" : "Registered Passport Image"}
-              </p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                {language === "ar"
-                  ? "قم برفع أو تحديث صورة جواز سفرك في أي وقت لتوثيق الحساب وتسريع عمليات السداد"
-                  : "Upload or update your passport image anytime to manage your verification status."}
-              </p>
-            </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            {passportPhoto || user?.passportPhoto ? (
+              <div className="relative w-40 h-24 rounded-xl overflow-hidden border-2 border-emerald-500 shadow-sm flex-shrink-0">
+                <img src={passportPhoto || user?.passportPhoto || ""} alt="Passport Photo" className="w-full h-full object-cover" />
+                <span className="absolute bottom-1 right-1 bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded font-bold shadow">
+                  Pending
+                </span>
+              </div>
+            ) : (
+              <div className="w-40 h-24 bg-white rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 text-xs gap-1 flex-shrink-0">
+                <Upload className="w-6 h-6 text-slate-400" />
+                <span>{language === "ar" ? "لا توجد صورة" : "No Passport Uploaded"}</span>
+              </div>
+            )}
 
-            <label className="inline-flex items-center space-x-2 space-x-reverse px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl cursor-pointer text-xs transition shadow-sm">
-              <Upload className="w-3.5 h-3.5" />
-              <span>
-                {uploadingPassport
-                  ? language === "ar" ? "جاري الرفع والتحفظ..." : "Uploading & Saving..."
-                  : passportPhoto || user?.passportPhoto
-                  ? language === "ar" ? "تغيير صورة جواز السفر" : "Change Passport Photo"
-                  : language === "ar" ? "رفع صورة جواز السفر الآن" : "Upload Passport Image"}
-              </span>
-              <input type="file" accept="image/*" onChange={handleProfilePassportUpload} className="hidden" />
-            </label>
+            <div className="flex-1 space-y-2 text-center sm:text-right rtl:sm:text-right">
+              <div>
+                <p className="font-bold text-slate-800 text-xs">
+                  {language === "ar" ? "صورة جواز السفر المعتمدة" : "Registered Passport Image"}
+                </p>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  {language === "ar"
+                    ? "قم برفع أو تحديث صورة جواز سفرك في أي وقت لتوثيق الحساب وتسريع عمليات السداد"
+                    : "Upload or update your passport image anytime to manage your verification status."}
+                </p>
+              </div>
+
+              <label className="inline-flex items-center space-x-2 space-x-reverse px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl cursor-pointer text-xs transition shadow-sm">
+                <Upload className="w-3.5 h-3.5" />
+                <span>
+                  {uploadingPassport
+                    ? language === "ar" ? "جاري الرفع والتحفظ..." : "Uploading & Saving..."
+                    : passportPhoto || user?.passportPhoto
+                    ? language === "ar" ? "تغيير صورة جواز السفر" : "Change Passport Photo"
+                    : language === "ar" ? "رفع صورة جواز السفر الآن" : "Upload Passport Image"}
+                </span>
+                <input type="file" accept="image/*" onChange={handleProfilePassportUpload} className="hidden" />
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Orders List Section */}
       {orders.length === 0 ? (
@@ -364,7 +361,10 @@ export default function CustomerOrdersPage() {
                             <p className="text-[10px] text-slate-400">Seller: {it.seller?.businessName}</p>
                           </div>
                         </div>
-                        <span className="font-bold text-emerald-700">${(it.price * it.quantity).toFixed(2)}</span>
+                        <span className="font-bold text-emerald-700 font-mono">
+                          {language === "ar" ? "ج.س " : "SDG "}
+                          {((it.price || 0) * it.quantity).toLocaleString()}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -372,7 +372,10 @@ export default function CustomerOrdersPage() {
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                     <div>
                       <span className="text-slate-500 text-[11px] block">{language === "ar" ? "المجموع الكلي:" : "Total Paid:"}</span>
-                      <span className="text-base font-black text-slate-900">${o.totalAmount.toFixed(2)}</span>
+                      <span className="text-base font-black text-slate-900 font-mono">
+                        {language === "ar" ? "ج.س " : "SDG "}
+                        {(o.totalAmount || 0).toLocaleString()}
+                      </span>
                     </div>
 
                     {/* Return Action Button: Only visible if order is DELIVERED */}
@@ -464,7 +467,7 @@ export default function CustomerOrdersPage() {
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
                 <span className="block font-bold text-slate-800 text-xs">
                   {language === "ar"
-                    ? "إرفاق الأدلة والبراهم: فيديو أو 6 صور للمنتج على الأقل *"
+                    ? "إرفاق الأدلة والبراهين: فيديو أو 6 صور للمنتج على الأقل *"
                     : "Evidence Attachment: Video OR at least 6 Photos required *"}
                 </span>
 
