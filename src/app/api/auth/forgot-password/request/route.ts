@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { sendResetCodeEmail } from "@/lib/email";
 
 const requestResetSchema = z.object({
   identifier: z.string().min(3, "Email or Phone is required"),
@@ -49,12 +50,14 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log(`[Forgot Password] Reset code generated for ${user.email}: ${resetCode}`);
+    // Send code to email
+    await sendResetCodeEmail({ to: user.email, code: resetCode });
+
+    console.log(`[Forgot Password] Reset code generated and sent to email ${user.email}`);
 
     return NextResponse.json({
       success: true,
-      message: `Verification code sent via ${method}`,
-      demoCode: resetCode, // Returned for convenient testing
+      message: `Verification code sent to ${user.email}`,
       email: user.email,
     });
   } catch (error: any) {

@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, X, AlertCircle } from "lucide-react";
+import { Upload, X, AlertCircle, Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AddProductPage() {
   const { t, language } = useLanguage();
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
@@ -18,6 +20,8 @@ export default function AddProductPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
+
+  const isApproved = user?.sellerProfile?.status === "APPROVED";
 
   useEffect(() => {
     fetch("/api/categories")
@@ -49,11 +53,27 @@ export default function AddProductPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Image upload failed");
-
-      setImages((prev) => [...prev, data.url]);
+      if (!res.ok || !data.url) {
+        // Fallback to base64 encoding if local API server fails
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result) {
+            setImages((prev) => [...prev, reader.result as string]);
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setImages((prev) => [...prev, data.url]);
+      }
     } catch (err: any) {
-      setError(err.message || "Failed to upload image");
+      // Base64 fallback
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          setImages((prev) => [...prev, reader.result as string]);
+        }
+      };
+      reader.readAsDataURL(file);
     } finally {
       setUploading(false);
     }
@@ -65,6 +85,15 @@ export default function AddProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isApproved) {
+      setError(
+        language === "ar"
+          ? "حسابك قيد التدقيق والمراجعة من قبل الإدارة. يلزم اعتماد حسابك أولاً للبدء بالبيع ونشر المنتجات."
+          : "Your seller account is pending admin approval. You cannot publish products yet."
+      );
+      return;
+    }
+
     if (images.length === 0) {
       setError(t("uploadAtLeastOneImg"));
       return;
@@ -107,6 +136,22 @@ export default function AddProductPage() {
         {t("addNewProductTitle")}
       </h1>
 
+      {!isApproved && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs flex items-start space-x-3 space-x-reverse">
+          <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="font-bold">
+              {language === "ar" ? "الحساب قيد الانتظار والمراجعة" : "Account Pending Admin Approval"}
+            </h4>
+            <p className="mt-1">
+              {language === "ar"
+                ? "حساب البائع الخاص بك قيد التدقيق حالياً. يمكنك تجهيز بيانات المنتجات، ولكن لن تتمكن من النشر والبيع حتى تتلقى الموافقة من إدارة جسور كوش."
+                : "Your seller account is currently under verification. You cannot publish products live until approved by JusurKush admin."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs flex items-center space-x-2 space-x-reverse">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -120,9 +165,10 @@ export default function AddProductPage() {
           <input
             type="text"
             required
+            disabled={!isApproved}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 disabled:bg-slate-100 disabled:cursor-not-allowed"
             placeholder={language === "ar" ? "مثال: هاتف سامسونج جالاكسي S24 ألترا" : "e.g. Ergonomic Wireless Headphones"}
           />
         </div>
@@ -130,9 +176,10 @@ export default function AddProductPage() {
         <div>
           <label className="block font-semibold text-slate-700 mb-1">{t("categoryTaxonomy")}</label>
           <select
+            disabled={!isApproved}
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 bg-white"
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-100 disabled:cursor-not-allowed"
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -144,25 +191,34 @@ export default function AddProductPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">{t("unitPriceUSD")}</label>
-            <input
-              type="number"
-              step="0.01"
-              required
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
-              placeholder="49.99"
-            />
+            <label className="block font-semibold text-slate-700 mb-1">
+              {language === "ar" ? "سعر الوحدة (بالجنيه السوداني ج.س)" : "Unit Price (Sudanese Pound - SDG)"}
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                step="1"
+                required
+                disabled={!isApproved}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="w-full pl-3 pr-14 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 disabled:bg-slate-100 disabled:cursor-not-allowed font-semibold"
+                placeholder="25000"
+              />
+              <span className="absolute right-3 top-2 text-slate-500 text-xs font-bold pointer-events-none">
+                {language === "ar" ? "ج.س" : "SDG"}
+              </span>
+            </div>
           </div>
           <div>
             <label className="block font-semibold text-slate-700 mb-1">{t("stockUnits")}</label>
             <input
               type="number"
               required
+              disabled={!isApproved}
               value={stock}
               onChange={(e) => setStock(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 disabled:bg-slate-100 disabled:cursor-not-allowed"
               placeholder="25"
             />
           </div>
@@ -173,9 +229,10 @@ export default function AddProductPage() {
           <textarea
             rows={4}
             required
+            disabled={!isApproved}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600"
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 disabled:bg-slate-100 disabled:cursor-not-allowed"
             placeholder={
               language === "ar"
                 ? "اكتب تفاصيل ومواصفات المنتج، الضمان، ومحتويات العلبة..."
@@ -201,20 +258,26 @@ export default function AddProductPage() {
               </div>
             ))}
 
-            <label className="w-20 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-emerald-600 flex flex-col items-center justify-center text-slate-500 hover:text-emerald-600 cursor-pointer transition">
+            <label className={`w-20 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-emerald-600 flex flex-col items-center justify-center text-slate-500 hover:text-emerald-600 cursor-pointer transition ${!isApproved ? 'pointer-events-none opacity-50' : ''}`}>
               <Upload className="w-5 h-5 mb-1" />
               <span className="text-[10px] font-bold">{uploading ? t("uploading") : t("uploadPassportNow")}</span>
-              <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+              <input type="file" accept="image/*" disabled={!isApproved} onChange={handleFileUpload} className="hidden" />
             </label>
           </div>
         </div>
 
         <button
           type="submit"
-          disabled={submitting || uploading}
+          disabled={submitting || uploading || !isApproved}
           className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition disabled:opacity-50 text-xs shadow"
         >
-          {submitting ? t("publishingProduct") : t("publishProductLive")}
+          {submitting
+            ? t("publishingProduct")
+            : !isApproved
+            ? language === "ar"
+              ? "في انتظار الموافقة على الحساب للبدء بالبيع"
+              : "Account Pending Approval to Start Selling"
+            : t("publishProductLive")}
         </button>
       </form>
     </div>

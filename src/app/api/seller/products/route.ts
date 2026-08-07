@@ -58,19 +58,10 @@ export async function POST(req: Request) {
     }
 
     // Authorization check: Must be APPROVED to publish live
-    if (user.sellerProfile.status === "SUSPENDED") {
+    if (user.sellerProfile.status !== "APPROVED") {
       return NextResponse.json(
         {
-          error: "Your seller account is temporarily suspended due to overdue platform commission payments. Please pay the balance to resume publishing.",
-        },
-        { status: 403 }
-      );
-    }
-
-    if (user.sellerProfile.status === "REJECTED") {
-      return NextResponse.json(
-        {
-          error: "Your seller registration has been rejected by administration.",
+          error: "Your seller account is currently under review by Admin. You cannot publish products until your account is approved.",
         },
         { status: 403 }
       );

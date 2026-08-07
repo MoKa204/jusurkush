@@ -113,11 +113,6 @@ export default function LoginPage() {
 
       <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs space-y-3">
         <p className="text-slate-600">
-          <Link href="/forgot-password" className="inline-block w-full py-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-extrabold rounded-xl transition text-center shadow-xs">
-            🔑 {t("forgotPasswordLink")}
-          </Link>
-        </p>
-        <p className="text-slate-600">
           {t("newToJusurKush")}{" "}
           <Link href="/register" className="text-emerald-700 font-bold hover:underline">
             {t("signUp")}

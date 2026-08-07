@@ -562,7 +562,7 @@ export const DICTIONARY: Translations = {
   editProductTitle: { ar: "تعديل تفاصيل المنتج", en: "Edit Product Details", fr: "Modifier le Produit", tr: "Ürünü Düzenle" },
   productTitle: { ar: "اسم المنتج / العنوان", en: "Product Title", fr: "Titre du Produit", tr: "Ürün Başlığı" },
   categoryTaxonomy: { ar: "تصنيف الفئة", en: "Category Taxonomy", fr: "Catégorie", tr: "Kategori" },
-  unitPriceUSD: { ar: "سعر الوحدة (بالدولار $)", en: "Unit Price ($ USD)", fr: "Prix Unitaire ($ USD)", tr: "Birim Fiyat ($ USD)" },
+  unitPriceUSD: { ar: "سعر الوحدة (بالجنيه السوداني ج.س)", en: "Unit Price (Sudanese Pound - SDG)", fr: "Prix Unitaire (Livre Soudanaise - SDG)", tr: "Birim Fiyat (Sudan Lirası - SDG)" },
   stockUnits: { ar: "الكمية المتوفرة بالمخزن", en: "Available Stock Units", fr: "Unités en Stock", tr: "Stok Adedi" },
   detailedDescription: { ar: "وصف المنتج بالتفصيل", en: "Detailed Description", fr: "Description Détaillée", tr: "Detaylı Açıklama" },
   productImages: { ar: "صور المنتج", en: "Product Images", fr: "Images du Produit", tr: "Ürün Görselleri" },
@@ -639,8 +639,13 @@ export const DICTIONARY: Translations = {
   passwordsDoNotMatch: { ar: "كلمتا المرور غير متطابقتين!", en: "Passwords do not match!", fr: "Les mots de passe ne correspondent pas !", tr: "Şifreler eşleşmiyor!" },
   resetPasswordSuccessBtn: { ar: "تحديث كلمة المرور وتعيينها", en: "Update & Set New Password", fr: "Mettre à jour le Mot de Passe", tr: "Şifreyi Güncelle" },
   updatingPassword: { ar: "جاري تحديث كلمة المرور...", en: "Updating Password...", fr: "Mise à jour...", tr: "Güncelleniyor..." },
-  codeSentSuccessAlert: { ar: "تم إرسال رمز التحقق بنجاح! يرجى التحقق وإدخال الرمز.", en: "Verification code generated and sent successfully!", fr: "Code envoyé avec succès !", tr: "Doğrulama kodu gönderildi!" },
+  codeSentSuccessAlert: { ar: "تم إرسال رمز التحقق بنجاح إلى بريدك الإلكتروني!", en: "Verification code sent successfully to your email!", fr: "Code envoyé avec succès à votre e-mail !", tr: "Doğrulama kodu e-postanıza gönderildi!" },
   passwordResetSuccessAlert: { ar: "تم تغيير كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.", en: "Password updated successfully! You can now log in with your new password.", fr: "Mot de passe réinitialisé avec succès !", tr: "Şifreniz başarıyla değiştirildi!" },
+  verifyCodeBtn: { ar: "التحقق من الرمز والمتابعة", en: "Verify Code & Proceed", fr: "Vérifier le Code", tr: "Kodu Doğrula ve Devam Et" },
+  verifyingCode: { ar: "جاري التحقق من الرمز...", en: "Verifying Code...", fr: "Vérification du code...", tr: "Kod Doğrulanıyor..." },
+  enterCodeSub: { ar: "أدخل رمز التحقق المكون من 6 أرقام والذي تم إرساله إلى بريدك الإلكتروني.", en: "Enter the 6-digit verification code sent to your registered email.", fr: "Entrez le code de vérification à 6 chiffres envoyé à votre e-mail.", tr: "E-postanıza gönderilen 6 haneli doğrulama kodunu girin." },
+  resetPasswordTitle: { ar: "تعيين كلمة المرور الجديدة", en: "Set New Password", fr: "Définir le Nouveau Mot de Passe", tr: "Yeni Şifreyi Belirle" },
+  resetPasswordSub: { ar: "أنشئ كلمة مرور جديدة وقوية لحسابك.", en: "Create a new strong password for your account.", fr: "Créer un nouveau mot de passe fort.", tr: "Hesabınız için yeni ve güçlü bir şifre oluşturun." },
 };
 
 interface LanguageContextType {

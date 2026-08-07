@@ -72,6 +72,22 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         </div>
       )}
 
+      {sellerStatus === "PENDING" && (
+        <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-start space-x-3 space-x-reverse text-xs text-amber-900">
+          <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="font-bold text-amber-900">
+              {language === "ar" ? "حساب البائع قيد التدقيق والمراجعة" : "Seller Account Pending Approval"}
+            </h4>
+            <p className="mt-0.5 text-amber-800">
+              {language === "ar"
+                ? "حسابك قيد التدقيق من قبل إدارة المنصة. يمكنك تصفح اللوحة، ولكن لن تتمكن من نشر أو بيع المنتجات حتى يتم اعتماد حسابك."
+                : "Your account is under review by Admin. You can access your dashboard, but adding or selling products is locked until your account is approved."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {sellerStatus === "APPROVED" && (
         <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex items-center justify-between text-xs text-emerald-800">
           <div className="flex items-center space-x-2 space-x-reverse">

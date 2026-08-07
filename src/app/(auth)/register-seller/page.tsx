@@ -50,11 +50,27 @@ export default function RegisterSellerPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-
-      setPassportPhoto(data.url);
+      if (!res.ok || !data.url) {
+        // Fallback to client-side base64 reader if API endpoint returned error
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result) {
+            setPassportPhoto(reader.result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setPassportPhoto(data.url);
+      }
     } catch (err: any) {
-      setError(err.message || "Failed to upload passport photo");
+      // Fallback to client-side base64 reader
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          setPassportPhoto(reader.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
     } finally {
       setUploadingPassport(false);
     }

@@ -83,7 +83,7 @@ export async function POST(req: Request) {
             bankAccountName: bankAccountName || `${businessName} Account`,
             bankAccountNumber: bankAccountNumber || "1002-3849-5882",
             bankIBAN: bankIBAN || null,
-            status: "APPROVED",
+            status: "PENDING",
           },
         },
       },
