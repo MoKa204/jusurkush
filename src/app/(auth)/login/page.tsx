@@ -78,12 +78,7 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="block font-semibold text-slate-700">{t("password")}</label>
-            <Link href="/forgot-password" className="text-[11px] text-emerald-700 font-semibold hover:underline">
-              {t("forgotPasswordLink")}
-            </Link>
-          </div>
+          <label className="block font-semibold text-slate-700 mb-1">{t("password")}</label>
           <div className="relative">
             <input
               type="password"
@@ -94,6 +89,14 @@ export default function LoginPage() {
               placeholder="••••••••"
             />
             <Lock className="w-4 h-4 text-slate-400 absolute right-3 ltr:left-3 ltr:right-auto top-2.5" />
+          </div>
+          <div className="flex justify-end pt-1.5">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-emerald-700 hover:text-emerald-800 font-extrabold hover:underline inline-flex items-center space-x-1 space-x-reverse"
+            >
+              <span>🔑 {t("forgotPasswordLink")}</span>
+            </Link>
           </div>
         </div>
 
@@ -108,7 +111,12 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs space-y-2">
+      <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs space-y-3">
+        <p className="text-slate-600">
+          <Link href="/forgot-password" className="inline-block w-full py-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-extrabold rounded-xl transition text-center shadow-xs">
+            🔑 {t("forgotPasswordLink")}
+          </Link>
+        </p>
         <p className="text-slate-600">
           {t("newToJusurKush")}{" "}
           <Link href="/register" className="text-emerald-700 font-bold hover:underline">
