@@ -32,15 +32,21 @@ export default function ProductCard({
   seller,
 }: ProductCardProps) {
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const primaryImage = images[0] || "/placeholder.jpg";
+
+  const isValidImage = primaryImage && (
+    primaryImage.startsWith("/") ||
+    primaryImage.startsWith("http") ||
+    primaryImage.startsWith("data:")
+  );
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col justify-between group">
       <div>
         {/* Product Image */}
         <Link href={`/product/${id}`} className="block relative aspect-square bg-slate-100 overflow-hidden">
-          {primaryImage.startsWith("/") || primaryImage.startsWith("http") ? (
+          {isValidImage ? (
             <img
               src={primaryImage}
               alt={name}
@@ -93,9 +99,11 @@ export default function ProductCard({
       {/* Price & Add to Cart Action */}
       <div className="px-4 pb-4 pt-2 border-t border-slate-100 flex items-center justify-between">
         <div>
-          <span className="text-xs text-emerald-700 font-bold">$</span>
-          <span className="text-lg font-black text-emerald-700">
-            {price.toFixed(2)}
+          <span className="text-xs text-emerald-700 font-bold me-1">
+            {language === "ar" ? "ج.س" : "SDG"}
+          </span>
+          <span className="text-lg font-black text-emerald-700 font-mono">
+            {price.toLocaleString()}
           </span>
         </div>
 

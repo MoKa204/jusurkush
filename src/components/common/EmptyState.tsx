@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { PackageOpen, Store } from "lucide-react";
+import { PackageOpen, Store, PlusCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 interface EmptyStateProps {
   title?: string;
@@ -16,13 +17,19 @@ export default function EmptyState({
   title,
   message,
   actionText,
-  actionHref = "/register-seller",
+  actionHref,
 }: EmptyStateProps) {
   const { t } = useLanguage();
+  const { user } = useAuth();
+
+  const isSeller = user?.role === "SELLER";
 
   const finalTitle = title || t("emptyTitle");
   const finalMessage = message || t("emptyDesc");
-  const finalActionText = actionText || t("regSellerBtn");
+  const finalActionText =
+    actionText || (isSeller ? t("addProduct") : t("regSellerBtn"));
+  const finalActionHref =
+    actionHref || (isSeller ? "/seller/products/new" : "/register-seller");
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center my-6 max-w-xl mx-auto shadow-sm">
@@ -31,12 +38,12 @@ export default function EmptyState({
       </div>
       <h3 className="text-xl font-bold text-slate-800 mb-2">{finalTitle}</h3>
       <p className="text-sm text-slate-500 leading-relaxed mb-6">{finalMessage}</p>
-      {finalActionText && actionHref && (
+      {finalActionText && finalActionHref && (
         <Link
-          href={actionHref}
+          href={finalActionHref}
           className="inline-flex items-center space-x-2 space-x-reverse bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition shadow"
         >
-          <Store className="w-4 h-4" />
+          {isSeller ? <PlusCircle className="w-4 h-4" /> : <Store className="w-4 h-4" />}
           <span>{finalActionText}</span>
         </Link>
       )}

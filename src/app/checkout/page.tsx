@@ -13,7 +13,6 @@ import {
   AlertCircle,
   MapPin,
   Sparkles,
-  ShieldCheck,
   ShieldAlert,
   Banknote,
 } from "lucide-react";
@@ -23,7 +22,7 @@ export default function CheckoutPage() {
   const { language } = useLanguage();
   const router = useRouter();
 
-  const [cart, setCart] = useState<any>(null);
+  const [cartItems, setCartItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,70 +58,91 @@ export default function CheckoutPage() {
   useEffect(() => {
     fetch("/api/cart")
       .then((res) => res.json())
-      .then((data) => setCart(data.cart || null))
+      .then((data) => setCartItems(data.items || []))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleProofUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingProof(true);
     setError(null);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "payment-proofs");
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-
-      setPaymentProof(data.url);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setPaymentProof(dataUrl);
       setUploadingProof(false);
-    }
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "payment-proofs");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setPaymentProof(data.url);
+        }
+      } catch (err) {
+        // Keep dataUrl fallback
+      }
+    };
+    reader.onerror = () => {
+      setError(language === "ar" ? "فشل قراءة صورة الإيصال" : "Failed to read receipt image");
+      setUploadingProof(false);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handlePassportUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePassportUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingPassport(true);
     setError(null);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "passports");
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-
-      setPassportPhoto(data.url);
-
-      // Submit to backend profile
-      await fetch("/api/profile/passport", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passportPhoto: data.url }),
-      });
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setPassportPhoto(dataUrl);
       setUploadingPassport(false);
-    }
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "passports");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setPassportPhoto(data.url);
+        }
+
+        await fetch("/api/profile/passport", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ passportPhoto: data.url || dataUrl }),
+        });
+      } catch (err) {
+        // Keep dataUrl fallback
+      }
+    };
+    reader.onerror = () => {
+      setError(language === "ar" ? "فشل قراءة صورة الجواز" : "Failed to read passport image");
+      setUploadingPassport(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const isVerified = user?.verificationStatus === "VERIFIED";
@@ -130,7 +150,6 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Passport restriction enforcement for non-COD payment methods
     if (paymentMethod === "bank_transfer" && !isVerified) {
       setError(
         language === "ar"
@@ -157,14 +176,12 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          shippingAddress: {
-            fullName,
-            phone,
-            street,
-            city,
-            state,
-            country,
-          },
+          fullName,
+          phone,
+          street,
+          city,
+          state,
+          country,
           paymentMethod,
           paymentProof: paymentMethod === "bank_transfer" ? paymentProof : null,
         }),
@@ -173,7 +190,7 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order placement failed");
 
-      router.push(`/orders/${data.order.id}`);
+      router.push(`/orders/${data.orderId || data.order?.id}`);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -185,8 +202,8 @@ export default function CheckoutPage() {
     return <div className="bg-white p-8 rounded-2xl border border-slate-200 animate-pulse h-64" />;
   }
 
-  const items = cart?.items || [];
-  const totalAmount = items.reduce((acc: number, it: any) => acc + it.product.price * it.quantity, 0);
+  const items = cartItems;
+  const totalAmount = items.reduce((acc: number, it: any) => acc + (it.product?.price || 0) * it.quantity, 0);
   const sampleSeller = items[0]?.product?.seller;
 
   return (
@@ -323,7 +340,7 @@ export default function CheckoutPage() {
                 <div>
                   <span className="block text-xs">{language === "ar" ? "الدفع عند الاستلام" : "Cash on Delivery"}</span>
                   <span className="text-[10px] text-slate-500 font-normal">
-                    {language === "ar" ? "م متاح لجميع المستخدمين" : "Available for all customers"}
+                    {language === "ar" ? "متاح لجميع العملاء" : "Available for all customers"}
                   </span>
                 </div>
                 <Banknote className="w-5 h-5 text-emerald-600" />
@@ -429,9 +446,12 @@ export default function CheckoutPage() {
             {items.map((it: any) => (
               <div key={it.id} className="py-2 flex items-center justify-between text-[11px]">
                 <span className="font-medium text-slate-700 truncate max-w-[140px]">
-                  {it.product.name} (x{it.quantity})
+                  {it.product?.name} (x{it.quantity})
                 </span>
-                <span className="font-bold text-slate-900">${(it.product.price * it.quantity).toFixed(2)}</span>
+                <span className="font-bold text-slate-900 font-mono">
+                  {language === "ar" ? "ج.س " : "SDG "}
+                  {((it.product?.price || 0) * it.quantity).toLocaleString()}
+                </span>
               </div>
             ))}
           </div>
@@ -439,13 +459,16 @@ export default function CheckoutPage() {
           <div className="pt-3 border-t border-slate-200 space-y-1">
             <div className="flex justify-between font-bold text-slate-800 text-sm">
               <span>{language === "ar" ? "المجموع الكلي:" : "Total Amount:"}</span>
-              <span className="text-emerald-700">${totalAmount.toFixed(2)}</span>
+              <span className="text-emerald-700 font-mono">
+                {language === "ar" ? "ج.س " : "SDG "}
+                {totalAmount.toLocaleString()}
+              </span>
             </div>
           </div>
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || items.length === 0}
             className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition disabled:opacity-50"
           >
             {submitting

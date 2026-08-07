@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, DollarSign, ShoppingBag, Landmark, PlusCircle } from "lucide-react";
+import { Package, Banknote, ShoppingBag, Landmark, PlusCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function SellerOverviewPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
@@ -27,7 +27,7 @@ export default function SellerOverviewPage() {
         const loansList = loansRes.loans || [];
 
         const revenue = ordersList.reduce(
-          (acc: number, item: any) => acc + item.price * item.quantity,
+          (acc: number, item: any) => acc + (item.price || 0) * (item.quantity || 1),
           0
         );
 
@@ -49,7 +49,7 @@ export default function SellerOverviewPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-xs">
       {/* Top Banner */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -59,7 +59,7 @@ export default function SellerOverviewPage() {
 
         <Link
           href="/seller/products/new"
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition flex items-center space-x-1.5 space-x-reverse shadow"
+          className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition flex items-center space-x-1.5 space-x-reverse shadow"
         >
           <PlusCircle className="w-4 h-4" />
           <span>{t("addProduct")}</span>
@@ -71,9 +71,12 @@ export default function SellerOverviewPage() {
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-500 font-semibold">{t("totalSalesRevenue")}</span>
-            <DollarSign className="w-5 h-5 text-emerald-600" />
+            <Banknote className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-2xl font-black text-slate-900">${stats.totalRevenue.toFixed(2)}</span>
+          <span className="text-xl font-black text-slate-900 font-mono">
+            {language === "ar" ? "ج.س " : "SDG "}
+            {stats.totalRevenue.toLocaleString()}
+          </span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -81,7 +84,7 @@ export default function SellerOverviewPage() {
             <span className="text-xs text-slate-500 font-semibold">{t("ordersReceivedCount")}</span>
             <ShoppingBag className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-2xl font-black text-slate-900">{stats.totalOrders}</span>
+          <span className="text-2xl font-black text-slate-900 font-mono">{stats.totalOrders}</span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -89,7 +92,7 @@ export default function SellerOverviewPage() {
             <span className="text-xs text-slate-500 font-semibold">{t("activeListingsCount")}</span>
             <Package className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-2xl font-black text-slate-900">{stats.totalProducts}</span>
+          <span className="text-2xl font-black text-slate-900 font-mono">{stats.totalProducts}</span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -97,7 +100,7 @@ export default function SellerOverviewPage() {
             <span className="text-xs text-slate-500 font-semibold">{t("loanStatus")}</span>
             <Landmark className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-sm font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 inline-block uppercase">
+          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 inline-block uppercase">
             {stats.loanStatus}
           </span>
         </div>

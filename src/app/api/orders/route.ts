@@ -12,7 +12,7 @@ const checkoutSchema = z.object({
   postalCode: z.string().optional(),
   country: z.string().min(2, "Country required"),
   paymentMethod: z.string().default("bank_transfer"),
-  paymentProof: z.string().min(1, "Photo of bank transfer payment proof is required"),
+  paymentProof: z.string().nullable().optional(),
 });
 
 export async function POST(req: Request) {
@@ -33,6 +33,14 @@ export async function POST(req: Request) {
     }
 
     const { paymentProof, paymentMethod, ...shippingDetails } = parsed.data;
+
+    // Payment proof validation for bank transfer
+    if (paymentMethod === "bank_transfer" && !paymentProof) {
+      return NextResponse.json(
+        { error: "Photo of bank transfer payment proof is required for Bank Transfer payment method" },
+        { status: 400 }
+      );
+    }
 
     // Fetch user cart
     const cart = await prisma.cart.findFirst({
@@ -83,16 +91,18 @@ export async function POST(req: Request) {
     });
 
     // Execute order creation transaction
+    const orderStatus = paymentMethod === "cod" ? "COD_PENDING" : "PROOF_SUBMITTED";
+
     const order = await prisma.$transaction(async (tx) => {
-      // 1. Create Order with Payment Transfer Proof
+      // 1. Create Order
       const newOrder = await tx.order.create({
         data: {
           buyerId: user.id,
           totalAmount,
-          status: "PROOF_SUBMITTED", // Seller will verify the attached receipt
+          status: orderStatus,
           shippingAddress: JSON.stringify(shippingDetails),
           paymentMethod,
-          paymentProof,
+          paymentProof: paymentProof || null,
           items: {
             create: cart.items.map((item) => ({
               productId: item.productId,
@@ -146,6 +156,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       orderId: order.id,
+      order,
       success: true,
     });
   } catch (error) {
