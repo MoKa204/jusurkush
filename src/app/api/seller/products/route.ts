@@ -5,7 +5,7 @@ import { getSessionUser } from "@/lib/auth";
 
 const createProductSchema = z.object({
   name: z.string().min(2, "Product name required"),
-  categoryId: z.string().min(1, "Category selection required"),
+  category: z.string().min(1, "Category is required"),
   description: z.string().min(5, "Description required"),
   price: z.number().positive("Price must be greater than 0"),
   stock: z.number().int().min(0, "Stock cannot be negative"),
@@ -68,7 +68,16 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const parsed = createProductSchema.safeParse(body);
+
+    // Map categoryId or category to category
+    const normalizedBody = {
+      ...body,
+      category: (body.category || body.categoryId || "").toString().trim(),
+      price: typeof body.price === "string" ? parseFloat(body.price) : body.price,
+      stock: typeof body.stock === "string" ? parseInt(body.stock, 10) : body.stock,
+    };
+
+    const parsed = createProductSchema.safeParse(normalizedBody);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -77,14 +86,36 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, categoryId, description, price, stock, images } = parsed.data;
+    const { name, category: rawCategory, description, price, stock, images } = parsed.data;
+
+    // Find or create Category dynamically from seller short answer input
+    const categoryName = rawCategory.trim();
+    const categorySlug = categoryName.toLowerCase().replace(/[^a-z0-9]+/g, "-") || `cat-${Date.now()}`;
+
+    let categoryObj = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: { equals: categoryName } },
+          { slug: categorySlug },
+        ],
+      },
+    });
+
+    if (!categoryObj) {
+      categoryObj = await prisma.category.create({
+        data: {
+          name: categoryName,
+          slug: categorySlug,
+        },
+      });
+    }
 
     const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`;
 
     const product = await prisma.product.create({
       data: {
         sellerId: user.sellerProfile.id,
-        categoryId,
+        categoryId: categoryObj.id,
         name,
         slug,
         description,

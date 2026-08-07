@@ -5,8 +5,11 @@ import Link from "next/link";
 import { ShieldCheck, Truck, Headphones, Store } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
+import { useAuth } from "@/context/AuthContext";
+
 export default function Footer() {
   const { t, language } = useLanguage();
+  const { user } = useAuth();
 
   return (
     <footer className="bg-slate-900 text-slate-300 mt-16 border-t border-slate-800">
@@ -76,9 +79,15 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-slate-400">
             <li>
-              <Link href="/register-seller" className="hover:text-emerald-400 transition">
-                {t("startSelling")}
-              </Link>
+              {user?.role === "SELLER" ? (
+                <Link href="/seller" className="hover:text-emerald-400 font-bold transition">
+                  {t("sellerDashboard")}
+                </Link>
+              ) : (
+                <Link href="/register-seller" className="hover:text-emerald-400 transition">
+                  {t("startSelling")}
+                </Link>
+              )}
             </li>
             <li>
               <Link href="/seller" className="hover:text-emerald-400 transition">

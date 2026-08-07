@@ -5,7 +5,7 @@ import { getSessionUser } from "@/lib/auth";
 
 const updateProductSchema = z.object({
   name: z.string().min(2, "Product name required"),
-  categoryId: z.string().min(1, "Category required"),
+  category: z.string().min(1, "Category required"),
   description: z.string().min(5, "Description required"),
   price: z.number().positive("Price must be > 0"),
   stock: z.number().int().min(0, "Stock cannot be negative"),
@@ -68,19 +68,48 @@ export async function PUT(
     }
 
     const body = await req.json();
-    const parsed = updateProductSchema.safeParse(body);
+
+    const normalizedBody = {
+      ...body,
+      category: (body.category || body.categoryId || "").toString().trim(),
+      price: typeof body.price === "string" ? parseFloat(body.price) : body.price,
+      stock: typeof body.stock === "string" ? parseInt(body.stock, 10) : body.stock,
+    };
+
+    const parsed = updateProductSchema.safeParse(normalizedBody);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: "Validation failed" }, { status: 400 });
+      return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
 
-    const { name, categoryId, description, price, stock, images } = parsed.data;
+    const { name, category: rawCategory, description, price, stock, images } = parsed.data;
+
+    const categoryName = rawCategory.trim();
+    const categorySlug = categoryName.toLowerCase().replace(/[^a-z0-9]+/g, "-") || `cat-${Date.now()}`;
+
+    let categoryObj = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: { equals: categoryName } },
+          { slug: categorySlug },
+        ],
+      },
+    });
+
+    if (!categoryObj) {
+      categoryObj = await prisma.category.create({
+        data: {
+          name: categoryName,
+          slug: categorySlug,
+        },
+      });
+    }
 
     const updated = await prisma.product.update({
       where: { id: params.id },
       data: {
         name,
-        categoryId,
+        categoryId: categoryObj.id,
         description,
         price,
         stock,

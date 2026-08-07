@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, X, AlertCircle, Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -10,30 +10,17 @@ export default function AddProductPage() {
   const { t, language } = useLanguage();
   const { user } = useAuth();
   const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
   const isApproved = user?.sellerProfile?.status === "APPROVED";
-
-  useEffect(() => {
-    fetch("/api/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        setCategories(data.categories || []);
-        if (data.categories?.length > 0) {
-          setCategoryId(data.categories[0].id);
-        }
-      })
-      .catch((err) => console.error(err));
-  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,41 +29,38 @@ export default function AddProductPage() {
     setUploading(true);
     setError("");
 
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "products");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        // Fallback to base64 encoding if local API server fails
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (reader.result) {
-            setImages((prev) => [...prev, reader.result as string]);
-          }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setImages((prev) => [...prev, data.url]);
-      }
-    } catch (err: any) {
-      // Base64 fallback
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (reader.result) {
-          setImages((prev) => [...prev, reader.result as string]);
-        }
-      };
-      reader.readAsDataURL(file);
-    } finally {
+    // Read image locally via FileReader for guaranteed display & upload
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setImages((prev) => [...prev, dataUrl]);
       setUploading(false);
-    }
+
+      // Optionally attempt server upload
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "products");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.url) {
+          // Replace latest base64 with uploaded URL if server upload succeeded
+          setImages((prev) => prev.map((img, i) => (i === prev.length - 1 ? data.url : img)));
+        }
+      } catch (err) {
+        // Keep dataUrl fallback
+      }
+    };
+    reader.onerror = () => {
+      setError("Failed to read image file");
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const removeImage = (idx: number) => {
@@ -94,6 +78,11 @@ export default function AddProductPage() {
       return;
     }
 
+    if (!category.trim()) {
+      setError(language === "ar" ? "يرجى كتابة تصنيف الفئة" : "Please enter a category name");
+      return;
+    }
+
     if (images.length === 0) {
       setError(t("uploadAtLeastOneImg"));
       return;
@@ -103,15 +92,26 @@ export default function AddProductPage() {
     setSubmitting(true);
 
     try {
+      const parsedPrice = parseFloat(price);
+      const parsedStock = parseInt(stock, 10);
+
+      if (isNaN(parsedPrice) || parsedPrice <= 0) {
+        throw new Error(language === "ar" ? "يرجى إدخال سعر صحيح أكبر من الصفر" : "Please enter a valid price greater than 0");
+      }
+
+      if (isNaN(parsedStock) || parsedStock < 0) {
+        throw new Error(language === "ar" ? "يرجى إدخال كمية مخزون صحيحة" : "Please enter a valid stock quantity");
+      }
+
       const res = await fetch("/api/seller/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          categoryId,
+          category: category.trim(),
           description,
-          price: parseFloat(price),
-          stock: parseInt(stock, 10),
+          price: parsedPrice,
+          stock: parsedStock,
           images,
         }),
       });
@@ -173,20 +173,22 @@ export default function AddProductPage() {
           />
         </div>
 
+        {/* Category Taxonomy - Short Answer Input */}
         <div>
           <label className="block font-semibold text-slate-700 mb-1">{t("categoryTaxonomy")}</label>
-          <select
+          <input
+            type="text"
+            required
             disabled={!isApproved}
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-100 disabled:cursor-not-allowed"
-          >
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+            placeholder={
+              language === "ar"
+                ? "اكتب الفئة والتصنيف (مثال: إلكترونيات، ملابس، مواد غذائية...)"
+                : "Enter category (e.g. Electronics, Clothing, Spices...)"
+            }
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -258,7 +260,11 @@ export default function AddProductPage() {
               </div>
             ))}
 
-            <label className={`w-20 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-emerald-600 flex flex-col items-center justify-center text-slate-500 hover:text-emerald-600 cursor-pointer transition ${!isApproved ? 'pointer-events-none opacity-50' : ''}`}>
+            <label
+              className={`w-20 h-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-emerald-600 flex flex-col items-center justify-center text-slate-500 hover:text-emerald-600 cursor-pointer transition ${
+                !isApproved ? "pointer-events-none opacity-50" : ""
+              }`}
+            >
               <Upload className="w-5 h-5 mb-1" />
               <span className="text-[10px] font-bold">{uploading ? t("uploading") : t("uploadPassportNow")}</span>
               <input type="file" accept="image/*" disabled={!isApproved} onChange={handleFileUpload} className="hidden" />

@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Upload, X, AlertCircle } from "lucide-react";
-
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function EditProductPage() {
@@ -13,28 +12,24 @@ export default function EditProductPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      fetch(`/api/seller/products/${id}`).then((res) => res.json()),
-      fetch("/api/categories").then((res) => res.json()),
-    ])
-      .then(([prodData, catData]) => {
-        setCategories(catData.categories || []);
+    fetch(`/api/seller/products/${id}`)
+      .then((res) => res.json())
+      .then((prodData) => {
         if (prodData.product) {
           const p = prodData.product;
           setName(p.name);
-          setCategoryId(p.categoryId);
+          setCategory(p.category?.name || "");
           setDescription(p.description);
           setPrice(p.price.toString());
           setStock(p.stock.toString());
@@ -48,27 +43,39 @@ export default function EditProductPage() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     setUploading(true);
     setError("");
 
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "products");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      setImages((prev) => [...prev, data.url]);
-    } catch (err: any) {
-      setError(err.message || "Failed to upload image");
-    } finally {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setImages((prev) => [...prev, dataUrl]);
       setUploading(false);
-    }
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "products");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setImages((prev) => prev.map((img, i) => (i === prev.length - 1 ? data.url : img)));
+        }
+      } catch (err) {
+        // keep dataUrl
+      }
+    };
+    reader.onerror = () => {
+      setError("Failed to read image file");
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const removeImage = (idx: number) => {
@@ -78,7 +85,12 @@ export default function EditProductPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (images.length === 0) {
-      setError("At least one product image is required");
+      setError(t("uploadAtLeastOneImg"));
+      return;
+    }
+
+    if (!category.trim()) {
+      setError(language === "ar" ? "يرجى كتابة تصنيف الفئة" : "Please enter a category name");
       return;
     }
 
@@ -91,7 +103,7 @@ export default function EditProductPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          categoryId,
+          category: category.trim(),
           description,
           price: parseFloat(price),
           stock: parseInt(stock, 10),
@@ -100,7 +112,10 @@ export default function EditProductPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to update product");
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update product");
+      }
 
       router.push("/seller/products");
     } catch (err: any) {
@@ -111,13 +126,13 @@ export default function EditProductPage() {
   };
 
   if (loading) {
-    return <div className="bg-white p-8 rounded-xl border border-slate-200 animate-pulse h-96" />;
+    return <div className="p-8 text-center text-xs text-slate-500">Loading product details...</div>;
   }
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-6">
+    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-2xl mx-auto space-y-6">
       <h1 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-3">
-        Edit Product Details
+        {t("editProductTitle")}
       </h1>
 
       {error && (
@@ -129,29 +144,26 @@ export default function EditProductPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         <div>
-          <label className="block font-semibold text-slate-700 mb-1">Product Title</label>
+          <label className="block font-semibold text-slate-700 mb-1">{t("productTitle")}</label>
           <input
             type="text"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#ee4d2d]"
+            className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-emerald-600"
           />
         </div>
 
         <div>
-          <label className="block font-semibold text-slate-700 mb-1">Category</label>
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#ee4d2d] bg-white"
-          >
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+          <label className="block font-semibold text-slate-700 mb-1">{t("categoryTaxonomy")}</label>
+          <input
+            type="text"
+            required
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-emerald-600 bg-white"
+            placeholder={language === "ar" ? "اكتب اسم الفئة (مثال: إلكترونيات، ملابس...)" : "Enter category name"}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -178,19 +190,19 @@ export default function EditProductPage() {
               required
               value={stock}
               onChange={(e) => setStock(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#ee4d2d]"
+              className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-emerald-600"
             />
           </div>
         </div>
 
         <div>
-          <label className="block font-semibold text-slate-700 mb-1">Description</label>
+          <label className="block font-semibold text-slate-700 mb-1">Detailed Description</label>
           <textarea
             rows={4}
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-[#ee4d2d]"
+            className="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:border-emerald-600"
           />
         </div>
 
@@ -210,9 +222,9 @@ export default function EditProductPage() {
               </div>
             ))}
 
-            <label className="w-20 h-20 rounded border-2 border-dashed border-slate-300 hover:border-[#ee4d2d] flex flex-col items-center justify-center text-slate-500 hover:text-[#ee4d2d] cursor-pointer transition">
+            <label className="w-20 h-20 rounded border-2 border-dashed border-slate-300 hover:border-emerald-600 flex flex-col items-center justify-center text-slate-500 hover:text-emerald-600 cursor-pointer transition">
               <Upload className="w-5 h-5 mb-1" />
-              <span className="text-[10px] font-bold">{uploading ? "Uploading..." : "Upload"}</span>
+              <span className="text-[10px] font-bold">{uploading ? t("uploading") : t("uploadPassportNow")}</span>
               <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
             </label>
           </div>
@@ -221,9 +233,9 @@ export default function EditProductPage() {
         <button
           type="submit"
           disabled={submitting || uploading}
-          className="w-full py-3 bg-[#ee4d2d] hover:bg-[#d73211] text-white font-bold rounded-lg transition disabled:opacity-50 text-xs"
+          className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition disabled:opacity-50 text-xs shadow"
         >
-          {submitting ? "Saving Changes..." : "Save Product Changes"}
+          {submitting ? "Updating Product..." : "Save Product Changes"}
         </button>
       </form>
     </div>

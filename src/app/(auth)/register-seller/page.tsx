@@ -33,47 +33,42 @@ export default function RegisterSellerPage() {
   const { refetchUser } = useAuth();
   const router = useRouter();
 
-  const handlePassportUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePassportUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingPassport(true);
     setError("");
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "passports");
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        // Fallback to client-side base64 reader if API endpoint returned error
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (reader.result) {
-            setPassportPhoto(reader.result as string);
-          }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setPassportPhoto(data.url);
-      }
-    } catch (err: any) {
-      // Fallback to client-side base64 reader
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (reader.result) {
-          setPassportPhoto(reader.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
-    } finally {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      setPassportPhoto(dataUrl);
       setUploadingPassport(false);
-    }
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "passports");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setPassportPhoto(data.url);
+        }
+      } catch (err) {
+        // Keep dataUrl fallback
+      }
+    };
+    reader.onerror = () => {
+      setError("Failed to read image file");
+      setUploadingPassport(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
